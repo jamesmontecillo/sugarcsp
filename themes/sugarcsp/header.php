@@ -12,13 +12,16 @@
 	<script type="text/javascript">
             $(document).ready(function(){
                 $('.faqAnswer').hide(); //Hide/close all containers
-                $('.faqQuestion:first').addClass('active').next().show(); //Add "active" class to first trigger, then show/open the immediate next container
+                //$('.faqQuestion:first').addClass('active').next().show(); //Add "active" class to first trigger, then show/open the immediate next container
                 //On Click
                 $('.faqQuestion').click(function(){
                     if( $(this).next().is(':hidden') ) { //If immediate next container is closed...
                             $('.faqQuestion').removeClass('active').next().slideUp(); //Remove all .acc_trigger classes and slide up the immediate next container
                             $(this).toggleClass('active').next().slideDown(); //Add .acc_trigger class to clicked trigger and slide down the immediate next container
-                    }
+                    }else{
+						$('.faqAnswer').slideUp();
+						$('.faqQuestion').removeClass('active');
+					}
                     return false; //Prevent the browser jump to the link anchor
                 });
             });

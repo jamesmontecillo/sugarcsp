@@ -4,7 +4,7 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 $user_name = $_REQUEST['user_name'];
 $password = $_REQUEST['password'];
 
-global $portal;
+global $portal, $sugar_config;
 //require_once('include/Portal/Portal.php');
 //$portal = new Portal();
 

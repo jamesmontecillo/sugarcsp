@@ -10,7 +10,7 @@
                     <a class="hide top">+ <?PHP echo $_SESSION['fullname']; ?></a>
                     <!--[if lte IE 6]><a href="#"><?PHP echo $_SESSION['fullname']; ?><table><tr><td><![endif]-->
                     <ul>
-                    <li><a href="index.php?module=settings&action=settings_edit">Settings</a></li>
+                    <li><a href="index.php?module=settings&action=setting">Settings</a></li>
                     <li><a href="index.php?module=myquestions&action=myquestions">my Questions</a></li>
                     <li><a href="index.php?module=ideas&action=myideas">my Ideas</a></li>
                     <li><a href="index.php?module=myproblems&action=myproblems">my Problems</a></li>

@@ -9,7 +9,7 @@
                             <li class="borderRight"><a href="index.php?module=myquestions&action=index">Ask a question</a></li>
                             <li class="borderRight"><a href="index.php?module=ideas&action=index">Share an idea</a></li>
                             <li class="borderRight"><a href="index.php?module=myproblems&action=index">Report a problem</a></li>
-                            <li><a href="index.php?module=faq&action=index">FAQ</a></li>
+                            <li><a href="index.php?module=FAQ&action=index">FAQ</a></li>
                         </ul>
                     </div>
                 </div>

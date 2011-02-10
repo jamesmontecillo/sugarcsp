@@ -20,19 +20,12 @@ if(isset($_REQUEST['module'])) {
 } else {
 	$module = "";
 }
-if(isset($_REQUEST['in'])) {
-	$in = $_REQUEST['in'];
-} else {
-	$in= "";
-}
-
 
 if(!empty($module)) {
 	$currentModule = $module;
 }
 
 session_start();
-
 
 $css = "style";
 $ie_css = "css-ie";
@@ -66,7 +59,9 @@ if(!empty($currentModuleFile)) {
 
 if ($_REQUEST['module']!='Users'){
     include_once("themes/sugarcsp/rightcontent.php");
-    include_once ("themes/sugarcsp/footer.php");
 }
+
+include_once ("themes/sugarcsp/footer.php");
+
 ?>
 
