@@ -20,21 +20,28 @@ if(isset($_REQUEST['module'])) {
 } else {
 	$module = "";
 }
+if(isset($_REQUEST['in'])) {
+	$in = $_REQUEST['in'];
+} else {
+	$in= "";
+}
+
 
 if(!empty($module)) {
 	$currentModule = $module;
 }
-session_start();
 
+session_start();
 
 
 $css = "style";
 $ie_css = "css-ie";
 $js = "jquery-latest";
-
 include_once("themes/sugarcsp/header.php");
-include_once("themes/sugarcsp/topmenu.php");
 
+if ($_REQUEST['module']!='Users'){
+    include_once("themes/sugarcsp/topmenu.php");
+}
 ///////////////////////////////////////////////////////////////////////////////
 ////	RENDER PAGE REQUEST BASED ON $module - $action - (and/or) $record
 if(!empty($action) && !empty($module)) {
@@ -57,8 +64,9 @@ if(!empty($currentModuleFile)) {
     include($currentModuleFile);
 }
 
-include_once("themes/sugarcsp/rightcontent.php");
-include_once ("themes/sugarcsp/footer.php");
-
+if ($_REQUEST['module']!='Users'){
+    include_once("themes/sugarcsp/rightcontent.php");
+    include_once ("themes/sugarcsp/footer.php");
+}
 ?>
 
