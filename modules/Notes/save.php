@@ -12,7 +12,7 @@ foreach($dataToSave as $name) {
 }
 
 $result = $portal->save($module, $dataValues);
-//$portal->login($sugar_config['portal_username'], $sugar_config['portal_password'],$_SESSION['user_name'],$_SESSION['user_password']);
+$portal->login($sugar_config['portal_username'], $sugar_config['portal_password'],$_SESSION['user_name'],$_SESSION['user_password']);
 print_r($portal->relateNote($result['id'], 'Cases', $_REQUEST['id']));
 
 //$noteId = $result['id'];
