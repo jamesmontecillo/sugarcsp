@@ -1,7 +1,149 @@
 <?php
+
+/*
+
+Modification information for LGPL compliance
+
+r56990 - 2010-06-16 13:05:36 -0700 (Wed, 16 Jun 2010) - kjing - snapshot "Mango" svn branch to a new one for GitHub sync
+
+r56989 - 2010-06-16 13:01:33 -0700 (Wed, 16 Jun 2010) - kjing - defunt "Mango" svn dev branch before github cutover
+
+r55980 - 2010-04-19 13:31:28 -0700 (Mon, 19 Apr 2010) - kjing - create Mango (6.1) based on windex
+
+r51719 - 2009-10-22 10:18:00 -0700 (Thu, 22 Oct 2009) - mitani - Converted to Build 3  tags and updated the build system 
+
+r51634 - 2009-10-19 13:32:22 -0700 (Mon, 19 Oct 2009) - mitani - Windex is the branch for Sugar Sales 1.0 development
+
+r50375 - 2009-08-24 18:07:43 -0700 (Mon, 24 Aug 2009) - dwong - branch kobe2 from tokyo r50372
+
+r42807 - 2008-12-29 11:16:59 -0800 (Mon, 29 Dec 2008) - dwong - Branch from trunk/sugarcrm r42806 to branches/tokyo/sugarcrm
+
+r39619 - 2008-09-09 13:41:34 -0700 (Tue, 09 Sep 2008) - jmertic - Bug 24827 - Remove all instances where we return a new object and assign it by reference, since this is deprecated in PHP 5 and emits E_DEPRECATED errors in PHP 5.3.
+Touched:
+- data/SugarBean.php
+- include/domit/php_http_client_generic.php
+- include/domit/php_http_connector.php
+- include/domit/testing_domit.php
+- include/domit/xml_domit_getelementsbypath.php
+- include/domit/xml_domit_lite_parser.php
+- include/domit/xml_domit_nodemaps.php
+- include/domit/xml_domit_parser.php
+- include/domit/xml_domit_shared.php
+- include/generic/SugarWidgets/SugarWidgetField.php
+- include/generic/SugarWidgets/SugarWidgetReportField.php
+- include/ListView/ProcessView.php
+- include/nusoap/class.soapclient.php
+- include/nusoap/nusoap.php
+- include/nusoap/nusoapmime.php
+- include/Pear/HTML_Safe/Safe.php
+- include/Pear/XML_HTMLSax3/HTMLSax3.php
+- modules/Administration/RebuildWorkFlow.php
+- modules/Expressions/RelateSelector.php
+- modules/Reports/templates/templates_reports.php
+- modules/WorkFlow/Delete.php
+- modules/WorkFlow/Save.php
+- modules/WorkFlow/SaveSequence.php
+- modules/WorkFlow/WorkFlow.php
+- modules/WorkFlowActionShells/CreateStep1.php
+- modules/WorkFlowActionShells/CreateStep2.php
+- modules/WorkFlowActionShells/Save.php
+- modules/WorkFlowActionShells/WorkFlowActionShell.php
+- modules/WorkFlowAlerts/Save.php
+- modules/WorkFlowAlerts/WorkFlowAlert.php
+- modules/WorkFlowAlertShells/DetailView.php
+- modules/WorkFlowAlertShells/WorkFlowAlertShell.php
+- modules/WorkFlowTriggerShells/CreateStep1.php
+- modules/WorkFlowTriggerShells/CreateStepFilter.php
+- modules/WorkFlowTriggerShells/SaveFilter.php
+- modules/WorkFlowTriggerShells/WorkFlowTriggerShell.php
+- soap/SoapHelperFunctions.php
+- test/modules/DynamicFields/DynamicFields_Bug24095_test.php
+- test/simpletest/browser.php
+- test/simpletest/default_reporter.php
+- test/simpletest/detached.php
+- test/simpletest/eclipse.php
+- test/simpletest/expectation.php
+- test/simpletest/extensions/pear_test_case.php
+- test/simpletest/form.php
+- test/simpletest/http.php
+- test/simpletest/mock_objects.php
+- test/simpletest/page.php
+- test/simpletest/parser.php
+- test/simpletest/remote.php
+- test/simpletest/shell_tester.php
+- test/simpletest/simple_test.php
+- test/simpletest/simpletest.php
+- test/simpletest/test/acceptance_test.php
+- test/simpletest/test/adapter_test.php
+- test/simpletest/test/authentication_test.php
+- test/simpletest/test/browser_test.php
+- test/simpletest/test/collector_test.php
+- test/simpletest/test/compatibility_test.php
+- test/simpletest/test/detached_test.php
+- test/simpletest/test/eclipse_test.php
+- test/simpletest/test/encoding_test.php
+- test/simpletest/test/errors_test.php
+- test/simpletest/test/expectation_test.php
+- test/simpletest/test/form_test.php
+- test/simpletest/test/frames_test.php
+- test/simpletest/test/http_test.php
+- test/simpletest/test/live_test.php
+- test/simpletest/test/mock_objects_test.php
+- test/simpletest/test/page_test.php
+- test/simpletest/test/parse_error_test.php
+- test/simpletest/test/parser_test.php
+- test/simpletest/test/remote_test.php
+- test/simpletest/test/shell_test.php
+- test/simpletest/test/shell_tester_test.php
+- test/simpletest/test/simpletest_test.php
+- test/simpletest/test/site/page_request.php
+- test/simpletest/test/tag_test.php
+- test/simpletest/test/unit_tester_test.php
+- test/simpletest/test/user_agent_test.php
+- test/simpletest/test/visual_test.php
+- test/simpletest/test/xml_test.php
+- test/simpletest/test_case.php
+- test/simpletest/ui/array_reporter/test.php
+- test/simpletest/ui/recorder/test.php
+- test/simpletest/unit_tester.php
+- test/simpletest/url.php
+- test/simpletest/user_agent.php
+- test/simpletest/web_tester.php
+- test/spikephpcoverage/src/PEAR.php
+- test/spikephpcoverage/src/util/Utility.php
+- test/spikephpcoverage/src/XML/Parser.php
+- test/spikephpcoverage/src/XML/Parser/Simple.php
+- test/test_utilities/SugarTest_SimpleBrowser.php
+
+r13782 - 2006-06-06 10:58:55 -0700 (Tue, 06 Jun 2006) - majed - changes entry point code
+
+r11115 - 2006-01-17 14:54:45 -0800 (Tue, 17 Jan 2006) - majed - add entry point validation
+
+r8991 - 2005-11-03 19:07:25 -0800 (Thu, 03 Nov 2005) - majed - fixes nusoap issue
+
+r8846 - 2005-10-31 11:01:12 -0800 (Mon, 31 Oct 2005) - majed - new version of nusoap
+
+r7905 - 2005-09-21 19:12:57 -0700 (Wed, 21 Sep 2005) - majed - restores old nusoap pre & with a few fixes
+
+r7861 - 2005-09-20 15:40:25 -0700 (Tue, 20 Sep 2005) - majed - & fix for 3.5.1
+
+r7452 - 2005-08-17 11:32:34 -0700 (Wed, 17 Aug 2005) - majed - changes soap to nusoap
+
+r5462 - 2005-05-25 13:50:11 -0700 (Wed, 25 May 2005) - majed - upgraded nusoap to .6.9
+
+r573 - 2004-09-04 13:03:32 -0700 (Sat, 04 Sep 2004) - sugarclint - undoing copyrights added in inadvertantly.  --clint
+
+r546 - 2004-09-03 11:49:38 -0700 (Fri, 03 Sep 2004) - sugarmsi - removed echo count
+
+r354 - 2004-08-02 23:00:37 -0700 (Mon, 02 Aug 2004) - sugarjacob - Adding Soap
+
+
+*/
+
+
 if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 /*
-$Id: nusoapmime.php 39619 2008-09-09 20:41:34Z jmertic $
+$Id: nusoapmime.php 58756 2010-11-05 05:22:34Z engsvnbuild $
 
 NuSOAP - Web Services Toolkit for PHP
 

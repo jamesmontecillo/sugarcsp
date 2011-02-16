@@ -9,7 +9,7 @@
         </label>
 
         <label class="mTop15 left">Note <br/>
-            <textarea name='description'></textarea>
+            <textarea name='description'> </textarea>
         </label>
 
         <label class="mTop15 left">Attachment <br/>

@@ -12,20 +12,19 @@ foreach($dataToSave as $name) {
 }
 
 $result = $portal->save($module, $dataValues);
-$portal->login($sugar_config['portal_username'], $sugar_config['portal_password'],$_SESSION['user_name'],$_SESSION['user_password']);
-print_r($portal->relateNote($result['id'], 'Cases', $_REQUEST['id']));
+$portal->relateNote($result['id'], 'Cases', $_REQUEST['id']);
 
-//$noteId = $result['id'];
-//if(!empty($_FILES['filename'])) {
-//    $portal->setAttachmentToNote($noteId, $_FILES['filename']['tmp_name'], $_FILES['filename']['name']);
-//}
-//
-//if(!empty($_REQUEST['returnmodule']) && !empty($_REQUEST['returnaction']) && !empty($_REQUEST['id'])) {
-//    $header = 'index.php?module=' . $_REQUEST['returnmodule'] . '&action=' . $_REQUEST['returnaction'] . '&id=' . $_REQUEST['id'];
-//}
-//else {
-//    $header = 'index.php?module='.$_REQUEST['returnmodule'].'&action='. $_REQUEST['returnaction'];
-//}
-//
-//header('Location: ' . $header);
+$noteId = $result['id'];
+if(!empty($_FILES['filename'])) {
+    $portal->setAttachmentToNote($noteId, $_FILES['filename']['tmp_name'], $_FILES['filename']['name']);
+}
+
+if(!empty($_REQUEST['returnmodule']) && !empty($_REQUEST['returnaction']) && !empty($_REQUEST['id'])) {
+    $header = 'index.php?module=' . $_REQUEST['returnmodule'] . '&action=' . $_REQUEST['returnaction'] . '&id=' . $_REQUEST['id'];
+}
+else {
+    $header = 'index.php?module='.$_REQUEST['returnmodule'].'&action='. $_REQUEST['returnaction'];
+}
+
+header('Location: ' . $header);
 ?>

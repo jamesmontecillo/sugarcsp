@@ -17,6 +17,7 @@
 <!-- MY IDEAS -->
 <?php
 	for ($i=0; $i<$case['result_count']; $i++){
+            $id = $case['entry_list'][$i]['name_value_list']['4']['value'];
 		echo '<div class="userListCtn">';
 		echo '<h2>'. $case['entry_list'][$i]['name_value_list']['5']['value'] . '</h2>';
 		echo '<p>'. $case['entry_list'][$i]['name_value_list']['10']['value'] .'</p>';
@@ -36,11 +37,14 @@
             </div>
                 <!-- CALL THE ATTACH NOTE -->
                 <div id="popup_name" class="popup_block">
-                   <?php include($attachnote); ?>
+                   <?php
+                   $returnmodule = 'ideas';
+                   $returnaction = 'myideas';
+                   include_once($attachnote);
+                   ?>
                 </div>
 
 <?php
-$id = $case['entry_list'][$i]['name_value_list']['4']['value'];
 $fields = array('id','name','description');
 $data = $portal->getRelated('Cases', 'Notes', $id, $fields, '', $offset = 0, $limit = -1);
 //print_r($data);

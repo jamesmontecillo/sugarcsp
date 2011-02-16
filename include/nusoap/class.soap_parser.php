@@ -1,4 +1,53 @@
 <?php
+
+/*
+
+Modification information for LGPL compliance
+
+r57813 - 2010-08-19 10:34:44 -0700 (Thu, 19 Aug 2010) - kjing - Author: John Mertic <jmertic@sugarcrm.com>
+    Bug 39085 - When loading the opposite search panel via ajax on the ListViews, call the index action instead of the ListView action to avoid touching pre-MVC code by accident.
+
+r56990 - 2010-06-16 13:05:36 -0700 (Wed, 16 Jun 2010) - kjing - snapshot "Mango" svn branch to a new one for GitHub sync
+
+r56989 - 2010-06-16 13:01:33 -0700 (Wed, 16 Jun 2010) - kjing - defunt "Mango" svn dev branch before github cutover
+
+r55980 - 2010-04-19 13:31:28 -0700 (Mon, 19 Apr 2010) - kjing - create Mango (6.1) based on windex
+
+r51719 - 2009-10-22 10:18:00 -0700 (Thu, 22 Oct 2009) - mitani - Converted to Build 3  tags and updated the build system 
+
+r51634 - 2009-10-19 13:32:22 -0700 (Mon, 19 Oct 2009) - mitani - Windex is the branch for Sugar Sales 1.0 development
+
+r51443 - 2009-10-12 13:34:36 -0700 (Mon, 12 Oct 2009) - jmertic - Bug 33332 - Made application PHP 5.3 compliant with E_DEPRECATED warnings on by:
+- Changing all ereg function to either preg or simple string based ones
+- No more references to magic quotes.
+- Change all the session_unregister() functions to just unset() the correct session variable instead.
+
+r50375 - 2009-08-24 18:07:43 -0700 (Mon, 24 Aug 2009) - dwong - branch kobe2 from tokyo r50372
+
+r42807 - 2008-12-29 11:16:59 -0800 (Mon, 29 Dec 2008) - dwong - Branch from trunk/sugarcrm r42806 to branches/tokyo/sugarcrm
+
+r13782 - 2006-06-06 10:58:55 -0700 (Tue, 06 Jun 2006) - majed - changes entry point code
+
+r11115 - 2006-01-17 14:54:45 -0800 (Tue, 17 Jan 2006) - majed - add entry point validation
+
+r8846 - 2005-10-31 11:01:12 -0800 (Mon, 31 Oct 2005) - majed - new version of nusoap
+
+r7905 - 2005-09-21 19:12:57 -0700 (Wed, 21 Sep 2005) - majed - restores old nusoap pre & with a few fixes
+
+r7861 - 2005-09-20 15:40:25 -0700 (Tue, 20 Sep 2005) - majed - & fix for 3.5.1
+
+r5462 - 2005-05-25 13:50:11 -0700 (Wed, 25 May 2005) - majed - upgraded nusoap to .6.9
+
+r573 - 2004-09-04 13:03:32 -0700 (Sat, 04 Sep 2004) - sugarclint - undoing copyrights added in inadvertantly.  --clint
+
+r546 - 2004-09-03 11:49:38 -0700 (Fri, 03 Sep 2004) - sugarmsi - removed echo count
+
+r354 - 2004-08-02 23:00:37 -0700 (Mon, 02 Aug 2004) - sugarjacob - Adding Soap
+
+
+*/
+
+
 if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 
@@ -6,13 +55,14 @@ if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 /**
 *
-* soap_parser class parses SOAP XML messages into native PHP values
+* nusoap_parser class parses SOAP XML messages into native PHP values
 *
 * @author   Dietrich Ayala <dietrich@ganx4.com>
+* @author   Scott Nichol <snichol@users.sourceforge.net>
 
 * @access   public
 */
-class soap_parser extends nusoap_base {
+class nusoap_parser extends nusoap_base {
 
 	var $xml = '';
 	var $xml_encoding = '';
@@ -36,7 +86,8 @@ class soap_parser extends nusoap_base {
 	var $fault_detail = '';
 	var $depth_array = array();
 	var $debug_flag = true;
-	var $soapresponse = NULL;
+	var $soapresponse = NULL;	// parsed SOAP Body
+	var $soapheader = NULL;		// parsed SOAP Header
 	var $responseHeaders = '';	// incoming SOAP headers (text)
 	var $body_position = 0;
 	// for multiref parsing:
@@ -56,7 +107,7 @@ class soap_parser extends nusoap_base {
 	* @param    string $decode_utf8 whether to decode UTF-8 to ISO-8859-1
 	* @access   public
 	*/
-	function soap_parser($xml,$encoding='UTF-8',$method='',$decode_utf8=true){
+	function nusoap_parser($xml,$encoding='UTF-8',$method='',$decode_utf8=true){
 		parent::nusoap_base();
 		$this->xml = $xml;
 		$this->xml_encoding = $encoding;
@@ -88,7 +139,7 @@ class soap_parser extends nusoap_base {
 			} else {
 				$this->debug('No XML declaration');
 			}
-			$this->debug('Entering soap_parser(), length='.strlen($xml).', encoding='.$encoding);
+			$this->debug('Entering nusoap_parser(), length='.strlen($xml).', encoding='.$encoding);
 			// Create an XML parser - why not xml_parser_create_ns?
 			$this->parser = xml_parser_create($this->xml_encoding);
 			// Set the options for parsing the XML data.
@@ -111,13 +162,15 @@ class soap_parser extends nusoap_base {
 				$this->debug("XML payload:\n" . $xml);
 				$this->setError($err);
 			} else {
+				$this->debug('in nusoap_parser ctor, message:');
+				$this->appendDebug($this->varDump($this->message));
 				$this->debug('parsed successfully, found root struct: '.$this->root_struct.' of name '.$this->root_struct_name);
 				// get final value
 				$this->soapresponse = $this->message[$this->root_struct]['result'];
-				// get header value: no, because this is documented as XML string
-//				if($this->root_header != '' && isset($this->message[$this->root_header]['result'])){
-//					$this->responseHeaders = $this->message[$this->root_header]['result'];
-//				}
+				// get header value
+				if($this->root_header != '' && isset($this->message[$this->root_header]['result'])){
+					$this->soapheader = $this->message[$this->root_header]['result'];
+				}
 				// resolve hrefs/ids
 				if(sizeof($this->multirefs) > 0){
 					foreach($this->multirefs as $id => $hrefs){
@@ -176,16 +229,16 @@ class soap_parser extends nusoap_base {
 			$name = substr(strstr($name,':'),1);
 		}
 		// set status
-		if($name == 'Envelope'){
+		if ($name == 'Envelope' && $this->status == '') {
 			$this->status = 'envelope';
-		} elseif($name == 'Header'){
+		} elseif ($name == 'Header' && $this->status == 'envelope') {
 			$this->root_header = $pos;
 			$this->status = 'header';
-		} elseif($name == 'Body'){
+		} elseif ($name == 'Body' && $this->status == 'envelope'){
 			$this->status = 'body';
 			$this->body_position = $pos;
 		// set method
-		} elseif($this->status == 'body' && $pos == ($this->body_position+1)){
+		} elseif($this->status == 'body' && $pos == ($this->body_position+1)) {
 			$this->status = 'method';
 			$this->root_struct_name = $name;
 			$this->root_struct = $pos;
@@ -206,7 +259,7 @@ class soap_parser extends nusoap_base {
 			$key_localpart = $this->getLocalPart($key);
 			// if ns declarations, add to class level array of valid namespaces
             if($key_prefix == 'xmlns'){
-				if(preg_match('/^http://www.w3.org/[0-9]{4}/XMLSchema$/',$value)){
+				if(preg_match('/^http:\/\/www.w3.org\/[0-9]{4}\/XMLSchema$/',$value)){
 					$this->XMLSchemaVersion = $value;
 					$this->namespaces['xsd'] = $this->XMLSchemaVersion;
 					$this->namespaces['xsi'] = $this->XMLSchemaVersion.'-instance';
@@ -217,17 +270,21 @@ class soap_parser extends nusoap_base {
 					$this->methodNamespace = $value;
 				}
 			// if it's a type declaration, set type
-            } elseif($key_localpart == 'type'){
-            	$value_prefix = $this->getPrefix($value);
-                $value_localpart = $this->getLocalPart($value);
-				$this->message[$pos]['type'] = $value_localpart;
-				$this->message[$pos]['typePrefix'] = $value_prefix;
-                if(isset($this->namespaces[$value_prefix])){
-                	$this->message[$pos]['type_namespace'] = $this->namespaces[$value_prefix];
-                } else if(isset($attrs['xmlns:'.$value_prefix])) {
-					$this->message[$pos]['type_namespace'] = $attrs['xmlns:'.$value_prefix];
-                }
-				// should do something here with the namespace of specified type?
+        } elseif($key_localpart == 'type'){
+        		if (isset($this->message[$pos]['type']) && $this->message[$pos]['type'] == 'array') {
+        			// do nothing: already processed arrayType
+        		} else {
+	            	$value_prefix = $this->getPrefix($value);
+	                $value_localpart = $this->getLocalPart($value);
+					$this->message[$pos]['type'] = $value_localpart;
+					$this->message[$pos]['typePrefix'] = $value_prefix;
+	                if(isset($this->namespaces[$value_prefix])){
+	                	$this->message[$pos]['type_namespace'] = $this->namespaces[$value_prefix];
+	                } else if(isset($attrs['xmlns:'.$value_prefix])) {
+						$this->message[$pos]['type_namespace'] = $attrs['xmlns:'.$value_prefix];
+	                }
+					// should do something here with the namespace of specified type?
+				}
 			} elseif($key_localpart == 'arrayType'){
 				$this->message[$pos]['type'] = 'array';
 				/* do arrayType ereg here
@@ -382,15 +439,17 @@ class soap_parser extends nusoap_base {
         	$this->document .= "</" . (isset($prefix) ? $prefix . ':' : '') . "$name>";
         }
 		// switch status
-		if($pos == $this->root_struct){
+		if ($pos == $this->root_struct){
 			$this->status = 'body';
 			$this->root_struct_namespace = $this->message[$pos]['namespace'];
-		} elseif($name == 'Body'){
+		} elseif ($pos == $this->root_header) {
 			$this->status = 'envelope';
-		 } elseif($name == 'Header'){
+		} elseif ($name == 'Body' && $this->status == 'body') {
 			$this->status = 'envelope';
-		} elseif($name == 'Envelope'){
-			//
+		} elseif ($name == 'Header' && $this->status == 'header') { // will never happen
+			$this->status = 'envelope';
+		} elseif ($name == 'Envelope' && $this->status == 'envelope') {
+			$this->status = '';
 		}
 		// set parent back to my parent
 		$this->parent = $this->message[$pos]['parent'];
@@ -423,19 +482,40 @@ class soap_parser extends nusoap_base {
 	}
 
 	/**
-	* get the parsed message
+	* get the parsed message (SOAP Body)
 	*
 	* @return	mixed
 	* @access   public
+	* @deprecated	use get_soapbody instead
 	*/
 	function get_response(){
 		return $this->soapresponse;
 	}
 
 	/**
-	* get the parsed headers
+	* get the parsed SOAP Body (NULL if there was none)
 	*
-	* @return	string XML or empty if no headers
+	* @return	mixed
+	* @access   public
+	*/
+	function get_soapbody(){
+		return $this->soapresponse;
+	}
+
+	/**
+	* get the parsed SOAP Header (NULL if there was none)
+	*
+	* @return	mixed
+	* @access   public
+	*/
+	function get_soapheader(){
+		return $this->soapheader;
+	}
+
+	/**
+	* get the unparsed SOAP Header
+	*
+	* @return	string XML or empty if no Header
 	* @access   public
 	*/
 	function getHeaders(){
@@ -535,7 +615,7 @@ class soap_parser extends nusoap_base {
             //} elseif($this->message[$pos]['type'] == 'SOAPStruct' || $this->message[$pos]['type'] == 'struct') {
 		    } else {
 	    		// Apache Vector type: treat as an array
-                $this->debug('in buildVal, adding Java Vector '.$this->message[$pos]['name']);
+                $this->debug('in buildVal, adding Java Vector or generic compound type '.$this->message[$pos]['name']);
 				if ($this->message[$pos]['type'] == 'Vector' && $this->message[$pos]['type_namespace'] == 'http://xml.apache.org/xml-soap') {
 					$notstruct = 1;
 				} else {
@@ -578,23 +658,36 @@ class soap_parser extends nusoap_base {
 					}
 				}
 			}
-			return is_array($params) ? $params : array();
+			$ret = is_array($params) ? $params : array();
+			$this->debug('in buildVal, return:');
+			$this->appendDebug($this->varDump($ret));
+			return $ret;
 		} else {
         	$this->debug('in buildVal, no children, building scalar');
 			$cdata = isset($this->message[$pos]['cdata']) ? $this->message[$pos]['cdata'] : '';
         	if (isset($this->message[$pos]['type'])) {
-				return $this->decodeSimple($cdata, $this->message[$pos]['type'], isset($this->message[$pos]['type_namespace']) ? $this->message[$pos]['type_namespace'] : '');
+				$ret = $this->decodeSimple($cdata, $this->message[$pos]['type'], isset($this->message[$pos]['type_namespace']) ? $this->message[$pos]['type_namespace'] : '');
+				$this->debug("in buildVal, return: $ret");
+				return $ret;
 			}
 			$parent = $this->message[$pos]['parent'];
 			if (isset($this->message[$parent]['type']) && ($this->message[$parent]['type'] == 'array') && isset($this->message[$parent]['arrayType'])) {
-				return $this->decodeSimple($cdata, $this->message[$parent]['arrayType'], isset($this->message[$parent]['arrayTypeNamespace']) ? $this->message[$parent]['arrayTypeNamespace'] : '');
+				$ret = $this->decodeSimple($cdata, $this->message[$parent]['arrayType'], isset($this->message[$parent]['arrayTypeNamespace']) ? $this->message[$parent]['arrayTypeNamespace'] : '');
+				$this->debug("in buildVal, return: $ret");
+				return $ret;
 			}
-           	return $this->message[$pos]['cdata'];
+           	$ret = $this->message[$pos]['cdata'];
+			$this->debug("in buildVal, return: $ret");
+           	return $ret;
 		}
 	}
 }
 
-
+/**
+ * Backward compatibility
+ */
+class soap_parser extends nusoap_parser {
+}
 
 
 ?>
