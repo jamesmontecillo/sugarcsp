@@ -33,10 +33,10 @@ $case = $portal->getEntries('Cases', $where, $orderBy, $offset = 0, $limit = 20)
         </div>
         <div class="subjects">
         	<?php echo $case['entry_list'][$i][name_value_list][5]['value']; ?>
-        </div>
+        </div><!--
         <div class="name">
         	<?php echo $case['entry_list'][$i][name_value_list][22]['value']; ?>
-        </div>
+        </div>-->
         <div class="status">
         	<?php echo $case['entry_list'][$i][name_value_list][17]['value']; ?>
         </div>

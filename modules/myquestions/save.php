@@ -1,25 +1,20 @@
 <?php if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+require_once('include/Save/SavePortal.php');
+$module = 'myquestions';
+$action = $module;
 
 $title = $_REQUEST['questiontitle'];
 $question = $_REQUEST['message'];
 
-//require_once('include/Portal/Portal.php');
-//$portal = new Portal();
-
-global $portal, $sugar_config;
-$response = $portal->login($sugar_config['portal_username'], $sugar_config['portal_password'], $_SESSION['user_name'], $_SESSION['user_password']);
-
-//print_r ($portal->getFields('Cases'));
-
 $dataarray = array(
-    array('name' => 'account_name', 'value' => $_SESSION['user_name']),
-    array('name' => 'case_type_c', 'value' => 'Question'),
+    array('name' => 'account_name', 'value' => $_SESSION['account_name']),
+    array('name' => 'type', 'value' => 'Question'),
     array('name' => 'name', 'value' => $title),
     array('name' => 'description' , 'value' => $question),
-    array('name' => 'status' , 'value' => 'New'),
+    array('name' => 'status' , 'value' => 'Submitted'),
 );
-$portal->save('Cases', $dataarray);
 
-header('Location: index.php?module=myquestions&action=index');
+$savePortal = new SavePortal();
+$savePortal->save($module, $action, $dataarray);
 
 ?>

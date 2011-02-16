@@ -19,4 +19,13 @@
                     </form>
                 </div>
             </div>
+            <div class="caseStat">
+                <ul>
+                    <li class="caseActive"><a href="">New</a>
+                    <li><a href="#">Pending</a>
+                    <li><a href="#">Open</a>
+                    <li><a href="#">Close</a>
+                </ul>
+            </div>
+            <div class="clear"></div>
 

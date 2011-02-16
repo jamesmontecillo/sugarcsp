@@ -30,10 +30,15 @@ session_start();
 $css = "style";
 $ie_css = "css-ie";
 $js = "jquery-latest";
+$custom_js = 'custom';
+$attachnote = 'modules/Notes/attachnotes.php';
+
 include_once("themes/sugarcsp/header.php");
 
 if ($_REQUEST['module']!='Users'){
-    include_once("themes/sugarcsp/topmenu.php");
+    if ($_REQUEST['module']!='registration'){
+        include_once("themes/sugarcsp/topmenu.php");
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////
 ////	RENDER PAGE REQUEST BASED ON $module - $action - (and/or) $record
@@ -58,7 +63,9 @@ if(!empty($currentModuleFile)) {
 }
 
 if ($_REQUEST['module']!='Users'){
-    include_once("themes/sugarcsp/rightcontent.php");
+    if ($_REQUEST['module']!='registration'){
+        include_once("themes/sugarcsp/rightcontent.php");
+    }
 }
 
 include_once ("themes/sugarcsp/footer.php");

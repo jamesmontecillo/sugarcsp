@@ -1,63 +1,17 @@
 <?php
-
-/*
-
-Modification information for LGPL compliance
-
-r57813 - 2010-08-19 10:34:44 -0700 (Thu, 19 Aug 2010) - kjing - Author: John Mertic <jmertic@sugarcrm.com>
-    Bug 39085 - When loading the opposite search panel via ajax on the ListViews, call the index action instead of the ListView action to avoid touching pre-MVC code by accident.
-
-r56990 - 2010-06-16 13:05:36 -0700 (Wed, 16 Jun 2010) - kjing - snapshot "Mango" svn branch to a new one for GitHub sync
-
-r56989 - 2010-06-16 13:01:33 -0700 (Wed, 16 Jun 2010) - kjing - defunt "Mango" svn dev branch before github cutover
-
-r55980 - 2010-04-19 13:31:28 -0700 (Mon, 19 Apr 2010) - kjing - create Mango (6.1) based on windex
-
-r51719 - 2009-10-22 10:18:00 -0700 (Thu, 22 Oct 2009) - mitani - Converted to Build 3  tags and updated the build system 
-
-r51634 - 2009-10-19 13:32:22 -0700 (Mon, 19 Oct 2009) - mitani - Windex is the branch for Sugar Sales 1.0 development
-
-r50375 - 2009-08-24 18:07:43 -0700 (Mon, 24 Aug 2009) - dwong - branch kobe2 from tokyo r50372
-
-r42807 - 2008-12-29 11:16:59 -0800 (Mon, 29 Dec 2008) - dwong - Branch from trunk/sugarcrm r42806 to branches/tokyo/sugarcrm
-
-r13782 - 2006-06-06 10:58:55 -0700 (Tue, 06 Jun 2006) - majed - changes entry point code
-
-r11115 - 2006-01-17 14:54:45 -0800 (Tue, 17 Jan 2006) - majed - add entry point validation
-
-r8846 - 2005-10-31 11:01:12 -0800 (Mon, 31 Oct 2005) - majed - new version of nusoap
-
-r5462 - 2005-05-25 13:50:11 -0700 (Wed, 25 May 2005) - majed - upgraded nusoap to .6.9
-
-r573 - 2004-09-04 13:03:32 -0700 (Sat, 04 Sep 2004) - sugarclint - undoing copyrights added in inadvertantly.  --clint
-
-r546 - 2004-09-03 11:49:38 -0700 (Fri, 03 Sep 2004) - sugarmsi - removed echo count
-
-r354 - 2004-08-02 23:00:37 -0700 (Mon, 02 Aug 2004) - sugarjacob - Adding Soap
-
-
-*/
-
-
 if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
-/*
-The NuSOAP project home is:
-http://sourceforge.net/projects/nusoap/
 
-The primary support for NuSOAP is the mailing list:
-nusoap-general@lists.sourceforge.net
-*/
 
 /**
 * caches instances of the wsdl class
 * 
-* @author   Scott Nichol <snichol@users.sourceforge.net>
+* @author   Scott Nichol <snichol@computer.org>
 * @author	Ingo Fischer <ingo@apollon.de>
 
 * @access public 
 */
-class nusoap_wsdlcache {
+class wsdlcache {
 	/**
 	 *	@var resource
 	 *	@access private
@@ -86,7 +40,7 @@ class nusoap_wsdlcache {
 	* @param integer $cache_lifetime lifetime for caching-files in seconds or 0 for unlimited
 	* @access public
 	*/
-	function nusoap_wsdlcache($cache_dir='.', $cache_lifetime=0) {
+	function wsdlcache($cache_dir='.', $cache_lifetime=0) {
 		$this->fplock = array();
 		$this->cache_dir = $cache_dir != '' ? $cache_dir : '.';
 		$this->cache_lifetime = $cache_lifetime;
@@ -133,11 +87,6 @@ class nusoap_wsdlcache {
   				}
 			}
 			// see what there is to return
-			if (!file_exists($filename)) {
-				$this->debug("$wsdl ($filename) not in cache (1)");
-				$this->releaseMutex($filename);
-				return null;
-			}
 			$fp = @fopen($filename, "r");
 			if ($fp) {
 				$s = implode("", @file($filename));
@@ -145,7 +94,7 @@ class nusoap_wsdlcache {
 				$this->debug("Got $wsdl ($filename) from cache");
 			} else {
 				$s = null;
-				$this->debug("$wsdl ($filename) not in cache (2)");
+				$this->debug("$wsdl ($filename) not in cache");
 			}
 			$this->releaseMutex($filename);
 			return (!is_null($s)) ? unserialize($s) : null;
@@ -168,11 +117,11 @@ class nusoap_wsdlcache {
 			$this->debug("Lock for $filename already exists");
 			return false;
 		}
-		$this->fplock[md5($filename)] = fopen($filename.".lock", "w");
+		$this->fplock[md5($filename)] = @fopen($filename.".lock", "w");
 		if ($mode == "r") {
-			return flock($this->fplock[md5($filename)], LOCK_SH);
+			return @flock($this->fplock[md5($filename)], LOCK_SH);
 		} else {
-			return flock($this->fplock[md5($filename)], LOCK_EX);
+			return @flock($this->fplock[md5($filename)], LOCK_EX);
 		}
 	}
 
@@ -188,11 +137,6 @@ class nusoap_wsdlcache {
 		$s = serialize($wsdl_instance);
 		if ($this->obtainMutex($filename, "w")) {
 			$fp = fopen($filename, "w");
-			if (! $fp) {
-				$this->debug("Cannot write $wsdl_instance->wsdl ($filename) in cache");
-				$this->releaseMutex($filename);
-				return false;
-			}
 			fputs($fp, $s);
 			fclose($fp);
 			$this->debug("Put $wsdl_instance->wsdl ($filename) in cache");
@@ -230,10 +174,6 @@ class nusoap_wsdlcache {
 	*/
 	function remove($wsdl) {
 		$filename = $this->createFilename($wsdl);
-		if (!file_exists($filename)) {
-			$this->debug("$wsdl ($filename) not in cache to be removed");
-			return false;
-		}
 		// ignore errors obtaining mutex
 		$this->obtainMutex($filename, "w");
 		$ret = unlink($filename);
@@ -241,11 +181,5 @@ class nusoap_wsdlcache {
 		$this->releaseMutex($filename);
 		return $ret;
 	}
-}
-
-/**
- * For backward compatibility
- */
-class wsdlcache extends nusoap_wsdlcache {
 }
 ?>

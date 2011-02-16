@@ -1,64 +1,21 @@
 <?php
-
-/*
-
-Modification information for LGPL compliance
-
-r57813 - 2010-08-19 10:34:44 -0700 (Thu, 19 Aug 2010) - kjing - Author: John Mertic <jmertic@sugarcrm.com>
-    Bug 39085 - When loading the opposite search panel via ajax on the ListViews, call the index action instead of the ListView action to avoid touching pre-MVC code by accident.
-
-r56990 - 2010-06-16 13:05:36 -0700 (Wed, 16 Jun 2010) - kjing - snapshot "Mango" svn branch to a new one for GitHub sync
-
-r56989 - 2010-06-16 13:01:33 -0700 (Wed, 16 Jun 2010) - kjing - defunt "Mango" svn dev branch before github cutover
-
-r55980 - 2010-04-19 13:31:28 -0700 (Mon, 19 Apr 2010) - kjing - create Mango (6.1) based on windex
-
-r51719 - 2009-10-22 10:18:00 -0700 (Thu, 22 Oct 2009) - mitani - Converted to Build 3  tags and updated the build system 
-
-r51634 - 2009-10-19 13:32:22 -0700 (Mon, 19 Oct 2009) - mitani - Windex is the branch for Sugar Sales 1.0 development
-
-r51443 - 2009-10-12 13:34:36 -0700 (Mon, 12 Oct 2009) - jmertic - Bug 33332 - Made application PHP 5.3 compliant with E_DEPRECATED warnings on by:
-- Changing all ereg function to either preg or simple string based ones
-- No more references to magic quotes.
-- Change all the session_unregister() functions to just unset() the correct session variable instead.
-
-r50375 - 2009-08-24 18:07:43 -0700 (Mon, 24 Aug 2009) - dwong - branch kobe2 from tokyo r50372
-
-r42807 - 2008-12-29 11:16:59 -0800 (Mon, 29 Dec 2008) - dwong - Branch from trunk/sugarcrm r42806 to branches/tokyo/sugarcrm
-
-r13782 - 2006-06-06 10:58:55 -0700 (Tue, 06 Jun 2006) - majed - changes entry point code
-
-r11115 - 2006-01-17 14:54:45 -0800 (Tue, 17 Jan 2006) - majed - add entry point validation
-
-r8846 - 2005-10-31 11:01:12 -0800 (Mon, 31 Oct 2005) - majed - new version of nusoap
-
-r5462 - 2005-05-25 13:50:11 -0700 (Wed, 25 May 2005) - majed - upgraded nusoap to .6.9
-
-r573 - 2004-09-04 13:03:32 -0700 (Sat, 04 Sep 2004) - sugarclint - undoing copyrights added in inadvertantly.  --clint
-
-r546 - 2004-09-03 11:49:38 -0700 (Fri, 03 Sep 2004) - sugarmsi - removed echo count
-
-r354 - 2004-08-02 23:00:37 -0700 (Mon, 02 Aug 2004) - sugarjacob - Adding Soap
-
-
-*/
-
-
 if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
 
 
 
 
 /**
-* parses an XML Schema, allows access to it's data, other utility methods.
-* imperfect, no validation... yet, but quite functional.
+* parses an XML Schema, allows access to it's data, other utility methods
+* no validation... yet.
+* very experimental and limited. As is discussed on XML-DEV, I'm one of the people
+* that just doesn't have time to read the spec(s) thoroughly, and just have a couple of trusty
+* tutorials I refer to :)
 *
 * @author   Dietrich Ayala <dietrich@ganx4.com>
-* @author   Scott Nichol <snichol@users.sourceforge.net>
 
 * @access   public
 */
-class nusoap_xmlschema extends nusoap_base  {
+class XMLSchema extends nusoap_base  {
 	
 	// files
 	var $schema = '';
@@ -97,9 +54,9 @@ class nusoap_xmlschema extends nusoap_base  {
 	* @param	string $namespaces namespaces defined in enclosing XML
 	* @access   public
 	*/
-	function nusoap_xmlschema($schema='',$xml='',$namespaces=array()){
+	function XMLSchema($schema='',$xml='',$namespaces=array()){
 		parent::nusoap_base();
-		$this->debug('nusoap_xmlschema class instantiated, inside constructor');
+		$this->debug('xmlschema class instantiated, inside constructor');
 		// files
 		$this->schema = $schema;
 		$this->xml = $xml;
@@ -125,8 +82,8 @@ class nusoap_xmlschema extends nusoap_base  {
     /**
     * parse an XML file
     *
-    * @param string $xml path/URL to XML file
-    * @param string $type (schema | xml)
+    * @param string $xml, path/URL to XML file
+    * @param string $type, (schema | xml)
 	* @return boolean
     * @access public
     */
@@ -153,7 +110,7 @@ class nusoap_xmlschema extends nusoap_base  {
 	* parse an XML string
 	*
 	* @param    string $xml path or URL
-    * @param	string $type (schema|xml)
+    * @param string $type, (schema|xml)
 	* @access   private
 	*/
 	function parseString($xml,$type){
@@ -197,21 +154,6 @@ class nusoap_xmlschema extends nusoap_base  {
 	}
 
 	/**
-	 * gets a type name for an unnamed type
-	 *
-	 * @param	string	Element name
-	 * @return	string	A type name for an unnamed type
-	 * @access	private
-	 */
-	function CreateTypeName($ename) {
-		$scope = '';
-		for ($i = 0; $i < count($this->complexTypeStack); $i++) {
-			$scope .= $this->complexTypeStack[$i] . '_';
-		}
-		return $scope . $ename . '_ContainedType';
-	}
-	
-	/**
 	* start-element handler
 	*
 	* @param    string $parser XML parser object
@@ -245,7 +187,7 @@ class nusoap_xmlschema extends nusoap_base  {
         if(count($attrs) > 0){
         	foreach($attrs as $k => $v){
                 // if ns declarations, add to class level array of valid namespaces
-				if(preg_match('/^xmlns/',$k)){
+				if(preg_match("/^xmlns/",$k)){
                 	//$this->xdebug("$k: $v");
                 	//$this->xdebug('ns_prefix: '.$this->getPrefix($k));
                 	if($ns_prefix = substr(strrchr($k,':'),1)){
@@ -290,7 +232,6 @@ class nusoap_xmlschema extends nusoap_base  {
             	$this->xdebug("parsing attribute:");
             	$this->appendDebug($this->varDump($attrs));
 				if (!isset($attrs['form'])) {
-					// TODO: handle globals
 					$attrs['form'] = $this->schemaInfo['attributeFormDefault'];
 				}
             	if (isset($attrs['http://schemas.xmlsoap.org/wsdl/:arrayType'])) {
@@ -340,13 +281,10 @@ class nusoap_xmlschema extends nusoap_base  {
 				}
 			break;
 			case 'complexContent':	// (optional) content for a complexType
-				$this->xdebug("do nothing for element $name");
 			break;
 			case 'complexType':
 				array_push($this->complexTypeStack, $this->currentComplexType);
 				if(isset($attrs['name'])){
-					// TODO: what is the scope of named complexTypes that appear
-					//       nested within other c complexTypes?
 					$this->xdebug('processing named complexType '.$attrs['name']);
 					//$this->currentElement = false;
 					$this->currentComplexType = $attrs['name'];
@@ -365,10 +303,9 @@ class nusoap_xmlschema extends nusoap_base  {
 					} else {
 						$this->complexTypes[$this->currentComplexType]['phpType'] = 'struct';
 					}
-				} else {
-					$name = $this->CreateTypeName($this->currentElement);
-					$this->xdebug('processing unnamed complexType for element ' . $this->currentElement . ' named ' . $name);
-					$this->currentComplexType = $name;
+				}else{
+					$this->xdebug('processing unnamed complexType for element '.$this->currentElement);
+					$this->currentComplexType = $this->currentElement . '_ContainedType';
 					//$this->currentElement = false;
 					$this->complexTypes[$this->currentComplexType] = $attrs;
 					$this->complexTypes[$this->currentComplexType]['typeClass'] = 'complexType';
@@ -386,17 +323,14 @@ class nusoap_xmlschema extends nusoap_base  {
 						$this->complexTypes[$this->currentComplexType]['phpType'] = 'struct';
 					}
 				}
-				$this->complexTypes[$this->currentComplexType]['simpleContent'] = 'false';
 			break;
 			case 'element':
 				array_push($this->elementStack, $this->currentElement);
+				// elements defined as part of a complex type should
+				// not really be added to $this->elements, but for some
+				// reason, they are
 				if (!isset($attrs['form'])) {
-					if ($this->currentComplexType) {
-						$attrs['form'] = $this->schemaInfo['elementFormDefault'];
-					} else {
-						// global
-						$attrs['form'] = 'qualified';
-					}
+					$attrs['form'] = $this->schemaInfo['elementFormDefault'];
 				}
 				if(isset($attrs['type'])){
 					$this->xdebug("processing typed element ".$attrs['name']." of type ".$attrs['type']);
@@ -418,25 +352,24 @@ class nusoap_xmlschema extends nusoap_base  {
 						$this->complexTypes[$this->currentComplexType]['arrayType'] = $attrs['type'];
 					}
 					$this->currentElement = $attrs['name'];
+					$this->elements[ $attrs['name'] ] = $attrs;
+					$this->elements[ $attrs['name'] ]['typeClass'] = 'element';
 					$ename = $attrs['name'];
 				} elseif(isset($attrs['ref'])){
 					$this->xdebug("processing element as ref to ".$attrs['ref']);
 					$this->currentElement = "ref to ".$attrs['ref'];
 					$ename = $this->getLocalPart($attrs['ref']);
 				} else {
-					$type = $this->CreateTypeName($this->currentComplexType . '_' . $attrs['name']);
-					$this->xdebug("processing untyped element " . $attrs['name'] . ' type ' . $type);
+					$this->xdebug("processing untyped element ".$attrs['name']);
 					$this->currentElement = $attrs['name'];
-					$attrs['type'] = $this->schemaTargetNamespace . ':' . $type;
-					$ename = $attrs['name'];
-				}
-				if (isset($ename) && $this->currentComplexType) {
-					$this->xdebug("add element $ename to complexType $this->currentComplexType");
-					$this->complexTypes[$this->currentComplexType]['elements'][$ename] = $attrs;
-				} elseif (!isset($attrs['ref'])) {
-					$this->xdebug("add element $ename to elements array");
 					$this->elements[ $attrs['name'] ] = $attrs;
 					$this->elements[ $attrs['name'] ]['typeClass'] = 'element';
+					$attrs['type'] = $this->schemaTargetNamespace . ':' . $attrs['name'] . '_ContainedType';
+					$this->elements[ $attrs['name'] ]['type'] = $attrs['type'];
+					$ename = $attrs['name'];
+				}
+				if(isset($ename) && $this->currentComplexType){
+					$this->complexTypes[$this->currentComplexType]['elements'][$ename] = $attrs;
 				}
 			break;
 			case 'enumeration':	//	restriction value list member
@@ -450,38 +383,22 @@ class nusoap_xmlschema extends nusoap_base  {
 			case 'extension':	// simpleContent or complexContent type extension
 				$this->xdebug('extension ' . $attrs['base']);
 				if ($this->currentComplexType) {
-					$ns = $this->getPrefix($attrs['base']);
-					if ($ns == '') {
-						$this->complexTypes[$this->currentComplexType]['extensionBase'] = $this->schemaTargetNamespace . ':' . $attrs['base'];
-					} else {
-						$this->complexTypes[$this->currentComplexType]['extensionBase'] = $attrs['base'];
-					}
-				} else {
-					$this->xdebug('no current complexType to set extensionBase');
+					$this->complexTypes[$this->currentComplexType]['extensionBase'] = $attrs['base'];
 				}
 			break;
 			case 'import':
 			    if (isset($attrs['schemaLocation'])) {
-					$this->xdebug('import namespace ' . $attrs['namespace'] . ' from ' . $attrs['schemaLocation']);
+					//$this->xdebug('import namespace ' . $attrs['namespace'] . ' from ' . $attrs['schemaLocation']);
                     $this->imports[$attrs['namespace']][] = array('location' => $attrs['schemaLocation'], 'loaded' => false);
 				} else {
-					$this->xdebug('import namespace ' . $attrs['namespace']);
+					//$this->xdebug('import namespace ' . $attrs['namespace']);
                     $this->imports[$attrs['namespace']][] = array('location' => '', 'loaded' => true);
 					if (! $this->getPrefixFromNamespace($attrs['namespace'])) {
 						$this->namespaces['ns'.(count($this->namespaces)+1)] = $attrs['namespace'];
 					}
 				}
 			break;
-			case 'include':
-			    if (isset($attrs['schemaLocation'])) {
-					$this->xdebug('include into namespace ' . $this->schemaTargetNamespace . ' from ' . $attrs['schemaLocation']);
-                    $this->imports[$this->schemaTargetNamespace][] = array('location' => $attrs['schemaLocation'], 'loaded' => false);
-				} else {
-					$this->xdebug('ignoring invalid XML Schema construct: include without schemaLocation attribute');
-				}
-			break;
 			case 'list':	// simpleType value list
-				$this->xdebug("do nothing for element $name");
 			break;
 			case 'restriction':	// simpleType, simpleContent or complexContent value restriction
 				$this->xdebug('restriction ' . $attrs['base']);
@@ -508,11 +425,6 @@ class nusoap_xmlschema extends nusoap_base  {
 				}
 			break;
 			case 'simpleContent':	// (optional) content for a complexType
-				if ($this->currentComplexType) {	// This should *always* be
-					$this->complexTypes[$this->currentComplexType]['simpleContent'] = 'true';
-				} else {
-					$this->xdebug("do nothing for element $name because there is no current complexType");
-				}
 			break;
 			case 'simpleType':
 				array_push($this->simpleTypeStack, $this->currentSimpleType);
@@ -523,19 +435,17 @@ class nusoap_xmlschema extends nusoap_base  {
 					$this->simpleTypes[ $attrs['name'] ]['typeClass'] = 'simpleType';
 					$this->simpleTypes[ $attrs['name'] ]['phpType'] = 'scalar';
 				} else {
-					$name = $this->CreateTypeName($this->currentComplexType . '_' . $this->currentElement);
-					$this->xdebug('processing unnamed simpleType for element ' . $this->currentElement . ' named ' . $name);
-					$this->currentSimpleType = $name;
+					$this->xdebug('processing unnamed simpleType for element '.$this->currentElement);
+					$this->currentSimpleType = $this->currentElement . '_ContainedType';
 					//$this->currentElement = false;
 					$this->simpleTypes[$this->currentSimpleType] = $attrs;
 					$this->simpleTypes[$this->currentSimpleType]['phpType'] = 'scalar';
 				}
 			break;
 			case 'union':	// simpleType type list
-				$this->xdebug("do nothing for element $name");
 			break;
 			default:
-				$this->xdebug("do not have any logic to process element $name");
+				//$this->xdebug("do not have anything to do for element $name");
 		}
 	}
 
@@ -563,7 +473,6 @@ class nusoap_xmlschema extends nusoap_base  {
 		// move on...
 		if($name == 'complexType'){
 			$this->xdebug('done processing complexType ' . ($this->currentComplexType ? $this->currentComplexType : '(unknown)'));
-			$this->xdebug($this->varDump($this->complexTypes[$this->currentComplexType]));
 			$this->currentComplexType = array_pop($this->complexTypeStack);
 			//$this->currentElement = false;
 		}
@@ -573,7 +482,6 @@ class nusoap_xmlschema extends nusoap_base  {
 		}
 		if($name == 'simpleType'){
 			$this->xdebug('done processing simpleType ' . ($this->currentSimpleType ? $this->currentSimpleType : '(unknown)'));
-			$this->xdebug($this->varDump($this->simpleTypes[$this->currentSimpleType]));
 			$this->currentSimpleType = array_pop($this->simpleTypeStack);
 		}
 	}
@@ -671,13 +579,13 @@ class nusoap_xmlschema extends nusoap_base  {
 		// simple types
 		if(isset($this->simpleTypes) && count($this->simpleTypes) > 0){
 			foreach($this->simpleTypes as $typeName => $eParts){
-				$xml .= " <$schemaPrefix:simpleType name=\"$typeName\">\n  <$schemaPrefix:restriction base=\"".$this->contractQName($eParts['type'])."\">\n";
+				$xml .= " <$schemaPrefix:simpleType name=\"$typeName\">\n  <$schemaPrefix:restriction base=\"".$this->contractQName($eParts['type'])."\"/>\n";
 				if (isset($eParts['enumeration'])) {
 					foreach ($eParts['enumeration'] as $e) {
 						$xml .= "  <$schemaPrefix:enumeration value=\"$e\"/>\n";
 					}
 				}
-				$xml .= "  </$schemaPrefix:restriction>\n </$schemaPrefix:simpleType>";
+				$xml .= " </$schemaPrefix:simpleType>";
 			}
 		}
 		// elements
@@ -693,15 +601,9 @@ class nusoap_xmlschema extends nusoap_base  {
 			}
 		}
 		// finish 'er up
-		$attr = '';
-		foreach ($this->schemaInfo as $k => $v) {
-			if ($k == 'elementFormDefault' || $k == 'attributeFormDefault') {
-				$attr .= " $k=\"$v\"";
-			}
-		}
-		$el = "<$schemaPrefix:schema$attr targetNamespace=\"$this->schemaTargetNamespace\"\n";
+		$el = "<$schemaPrefix:schema targetNamespace=\"$this->schemaTargetNamespace\"\n";
 		foreach (array_diff($this->usedNamespaces, $this->enclosingNamespaces) as $nsp => $ns) {
-			$el .= " xmlns:$nsp=\"$ns\"";
+			$el .= " xmlns:$nsp=\"$ns\"\n";
 		}
 		$xml = $el . ">\n".$xml."</$schemaPrefix:schema>\n";
 		return $xml;
@@ -723,8 +625,8 @@ class nusoap_xmlschema extends nusoap_base  {
     * returns false if no type exists, or not w/ the given namespace
     * else returns a string that is either a native php type, or 'struct'
     *
-    * @param string $type name of defined type
-    * @param string $ns namespace of type
+    * @param string $type, name of defined type
+    * @param string $ns, namespace of type
     * @return mixed
     * @access public
     * @deprecated
@@ -755,7 +657,7 @@ class nusoap_xmlschema extends nusoap_base  {
 	*
 	*   For simpleType or element, the array has different keys.
     *
-    * @param string $type
+    * @param string
     * @return mixed
     * @access public
     * @see addComplexType
@@ -764,17 +666,10 @@ class nusoap_xmlschema extends nusoap_base  {
     */
 	function getTypeDef($type){
 		//$this->debug("in getTypeDef for type $type");
-		if (substr($type, -1) == '^') {
-			$is_element = 1;
-			$type = substr($type, 0, -1);
-		} else {
-			$is_element = 0;
-		}
-
-		if((! $is_element) && isset($this->complexTypes[$type])){
+		if(isset($this->complexTypes[$type])){
 			$this->xdebug("in getTypeDef, found complexType $type");
 			return $this->complexTypes[$type];
-		} elseif((! $is_element) && isset($this->simpleTypes[$type])){
+		} elseif(isset($this->simpleTypes[$type])){
 			$this->xdebug("in getTypeDef, found simpleType $type");
 			if (!isset($this->simpleTypes[$type]['phpType'])) {
 				// get info for type to tack onto the simple type
@@ -810,9 +705,6 @@ class nusoap_xmlschema extends nusoap_base  {
 					if (isset($etype['elements'])) {
 						$this->elements[$type]['elements'] = $etype['elements'];
 					}
-					if (isset($etype['extensionBase'])) {
-						$this->elements[$type]['extensionBase'] = $etype['extensionBase'];
-					}
 				} elseif ($ns == 'http://www.w3.org/2001/XMLSchema') {
 					$this->xdebug("in getTypeDef, element $type is an XSD type");
 					$this->elements[$type]['phpType'] = 'scalar';
@@ -836,7 +728,7 @@ class nusoap_xmlschema extends nusoap_base  {
 	/**
     * returns a sample serialization of a given type, or false if no type by the given name
     *
-    * @param string $type name of type
+    * @param string $type, name of type
     * @return mixed
     * @access public
     * @deprecated
@@ -846,7 +738,7 @@ class nusoap_xmlschema extends nusoap_base  {
 	if($typeDef = $this->getTypeDef($type)){
 		$str .= '<'.$type;
 	    if(is_array($typeDef['attrs'])){
-		foreach($typeDef['attrs'] as $attName => $data){
+		foreach($attrs as $attName => $data){
 		    $str .= " $attName=\"{type = ".$data['type']."}\"";
 		}
 	    }
@@ -871,8 +763,8 @@ class nusoap_xmlschema extends nusoap_base  {
     * returns HTML form elements that allow a user
     * to enter values for creating an instance of the given type.
     *
-    * @param string $name name for type instance
-    * @param string $type name of type
+    * @param string $name, name for type instance
+    * @param string $type, name of type
     * @return string
     * @access public
     * @deprecated
@@ -974,7 +866,7 @@ class nusoap_xmlschema extends nusoap_base  {
 	* @param string $phpType (should always be scalar)
 	* @param array $enumeration array of values
 	* @access public
-	* @see nusoap_xmlschema
+	* @see xmlschema
 	* @see getTypeDef
 	*/
 	function addSimpleType($name, $restrictionBase='', $typeClass='simpleType', $phpType='scalar', $enumeration=array()) {
@@ -994,7 +886,7 @@ class nusoap_xmlschema extends nusoap_base  {
 	* adds an element to the schema
 	*
 	* @param array $attrs attributes that must include name and type
-	* @see nusoap_xmlschema
+	* @see xmlschema
 	* @access public
 	*/
 	function addElement($attrs) {
@@ -1009,11 +901,7 @@ class nusoap_xmlschema extends nusoap_base  {
 	}
 }
 
-/**
- * Backward compatibility
- */
-class XMLSchema extends nusoap_xmlschema {
-}
+
 
 
 ?>

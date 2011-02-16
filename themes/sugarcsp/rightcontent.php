@@ -43,14 +43,6 @@
                 </div>
             </div>
 
-            <div class="sidebar mTop30">
-                <object width="190" height="137">
-                <param name="movie" value="http://www.youtube.com/v/E557WJ0BtQQ?fs=1&amp;hl=en_US" />
-                <param name="allowFullScreen" value="true" />
-                <param name="allowscriptaccess" value="always" />
-                <embed src="images/E557WJ0BtQQ.swf?fs=1&amp;hl=en_US" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="190" height="137"></embed>
-                </object>
-            </div>
         </div>
     </div><!-- END OF rightCtn -->
 </div><!-- END OF page -->

@@ -50,5 +50,6 @@ $dataarray = array(
     array('name' => 'primary_address_postalcode', 'value' => $add_postcode),
     array('name' => 'primary_address_country', 'value' => $add_country),
     );
-//$portal->save('Leads', $dataarray);
+$portal->save('Leads', $dataarray);
+header('Location: index.php?module=Users&action=Login');
 ?>

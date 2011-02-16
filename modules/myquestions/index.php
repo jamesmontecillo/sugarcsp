@@ -1,4 +1,9 @@
-<?php if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point'); ?>
+<?php if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if (!isset($_SESSION['session_id'])){
+    $_SESSION["login_error"] = 'Session Timed Out';
+    header('Location: index.php?module=Users&action=Login&sessiontimeout=1');
+}
+?>
 <!-- ASK A QUESTION -->
 <form action="index.php?module=myquestions&action=save" method="POST">
     <div class="mTop30">
