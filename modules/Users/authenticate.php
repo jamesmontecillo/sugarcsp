@@ -30,6 +30,8 @@ if (isset($_SESSION['session_id'] )){
     $_SESSION['user_name'] = $user_name;
     $_SESSION['user_password'] = $password;
     header('Location: index.php?module=myquestions&action=index');
+}else{
+    header('Location: index.php?module=Users&action=Login');
 }
 
 //{

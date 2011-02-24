@@ -95,14 +95,16 @@ input, textarea {
         padding:5px 0;
         text-align:center
     }
-    .loginInput { height:40px }
-        .loginInput label {
+    .loginInput, .forgotPass { height:40px }
+        .loginInput label, .forgotPass label {
             font-size:.9em;
             padding:8px 0;
             text-align:right;
-            width:90px
         }
+        .loginInput label { width:90px }
+        .forgotPass label { width:110px }
         .loginInput input { width:200px }
+        .forgotPass input { width:180px }
     .forgotpassword { text-align:right }
     .login-bottom {
         height:35px;
@@ -463,3 +465,36 @@ input, textarea {
             width:180px
         }
         .supportlinks img { margin-right:5px }
+		
+/* FOMR VALIDATION */
+input, textbox, textarea, select {
+    border: 1px solid #333;
+    background-color: #fff;
+}
+
+input.none {
+    border:none;
+}
+
+label.error {
+        color: #900000 ;
+        font-size: 12px;
+        display: block;
+}
+
+input.error, select.error, textarea.error {
+    background: #BFE3FE;
+    border: 1px solid #00477D;
+}
+
+.style29 {
+	font-size: 11px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #FF0000;
+	text-align: justify;
+}
+
+#form-validate .gray * { color: gray; display: none; background-color: #fff; }
+
+#optional {background-color: #FFFFCC; padding: 2px 1px 2px 2px; margin:0; border: #FFFF66 solid 1px;}
+

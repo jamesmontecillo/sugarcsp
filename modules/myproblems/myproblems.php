@@ -1,37 +1,58 @@
 <?php if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if (!isset($_SESSION['session_id'])){
+    $_SESSION["login_error"] = 'Session Timed Out';
+    header('Location: index.php?module=Users&action=Login&sessiontimeout=1');
+}
+require_once('include/ListView/list.php');
 
-    global $portal, $sugar_config;
-    $portal->login($sugar_config['portal_username'], $sugar_config['portal_password'], $_SESSION['user_name'], $_SESSION['user_password']);
-
+    if (!empty ($_REQUEST['stats'])){
+        $stats = $_REQUEST['stats'];
+    }else{
+        $stats = 'New';
+    }
     $where = array(
             array('name'=>'portal_viewable', 'value'=>'1', 'operator'=>'='),
             array('name'=>'type', 'value'=>'Problem', 'operator'=>'='),
-            array('name'=>'status', 'value'=>'Open', 'operator'=>'='),
+            array('name'=>'status', 'value'=>$stats, 'operator'=>'=')
     );
 
     $orderBy = 'case_number DESC';
-    $case = $portal->getEntries('Cases', $where, $orderBy, $offset = 0, $limit = 20);
+
+    $cases = new ListData();
+    $case = $cases->processdata($stats, $where, $orderBy);
+
 //    print_r($case);
+    $result_count = $case['result_count'];
 
 ?>
 <!-- MY PROBLEMS -->
 <?php
-	for ($i=0; $i<$case['result_count']; $i++){
-            $id = $case['entry_list'][$i]['name_value_list']['4']['value'];
-		echo '<div class="userListCtn">';
-		echo '<h2>'. $case['entry_list'][$i]['name_value_list']['5']['value'] . '</h2>';
-		echo '<p>'. $case['entry_list'][$i]['name_value_list']['10']['value'] .'</p>';
+	for ($i=0; $i<$result_count; $i++){
+            $id = $case['entry_list'][$i]['id'];
 ?>
+    <div class="userListCtn">
+        <h2><?php echo $case['entry_list'][$i]['name_value_list']['5']['value']; ?></h2>
+	<p><?php echo $case['entry_list'][$i]['name_value_list']['10']['value']; ?></p>
+
     	<div class="userListStatCtn">
             <div class="progressCtn">
                 <span><b>Status : <?php echo $case['entry_list'][$i]['name_value_list']['17']['value']; ?></b></span>
             </div>
+            <?php /* ?>
             <div class="dateCtn">
-                <span>Feb 8, 2011</span>
-            </div>
+                <span>
+                <?php
+                    $dateentered = $case['entry_list'][$i]['name_value_list']['6']['value'];
+                    $date = new DateTime($dateentered);
+                    echo $date->format('m-d-Y');
+                ?>
+                </span>
+            </div> <? */ ?>
+            <?php if (!empty($case['entry_list'][$i]['name_value_list']['0']['value'])) { ?>
             <div class="repCtn">
-                <span><?php echo $case['entry_list'][$i]['name_value_list']['22']['value']; ?></span>
+                <span><?php echo $case['entry_list'][$i]['name_value_list']['0']['value']; ?></span>
             </div>
+            <?php } ?>
             <div class="attachCtn right">
                 <span><a href="#?w=610" rel="popup_name" class="poplight">Create Note</a></span>
             </div>
@@ -40,16 +61,17 @@
                    <?php
                    $returnmodule = 'myproblems';
                    $returnaction = 'myproblems';
-                   include_once($attachnote);
+                   include($attachnote);
                    ?>
                 </div>
 
 <?php
 $fields = array('id','name','description');
-$data = $portal->getRelated('Cases', 'Notes', $id, $fields, '', $offset = 0, $limit = -1);
+$relateddata = new ListData();
+$data = $relateddata->getrelateddata('Cases', 'Notes', $fields, $id);
 //print_r($data);
-$i=0;
-if ($data['entry_list'][$i]['id'] != ""){
+$j=0;
+if (!empty($data['entry_list'][$j]['id'])){
 ?>
             <div class="noteCtn right bright">
                  <span><a href="#">View Note</a></span>
@@ -61,19 +83,19 @@ if ($data['entry_list'][$i]['id'] != ""){
                             <div class="noteDesc">Note</div>
                             <div class="attach">Attachment</div>
                         </div>
-                        <?php while($data['entry_list'][$i]['id'] != ""){ ?>
+                        <?php while(!empty($data['entry_list'][$j]['id'])){ ?>
                         <div class="noteContent left">
                             <div class="noteSubjects">
-                            <?php echo $data['entry_list'][$i]['name_value_list']['1']['value']; ?> &nbsp;
+                            <?php echo $data['entry_list'][$j]['name_value_list']['1']['value']; ?> &nbsp;
                             </div>
                             <div class="noteDesc">
-                            <?php echo $data['entry_list'][$i]['name_value_list']['2']['value']; ?> &nbsp;
+                            <?php echo $data['entry_list'][$j]['name_value_list']['2']['value']; ?> &nbsp;
                             </div>
                             <div class="attach">
                                 Attached &nbsp;
                             </div>
                         </div>
-                        <?php $i++; } ?>
+                        <?php $j++; } ?>
                         <!-- END -->
                     </div>
                 </div>

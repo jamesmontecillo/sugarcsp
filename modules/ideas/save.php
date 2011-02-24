@@ -11,7 +11,7 @@ $dataarray = array(
     array('name' => 'type', 'value' => 'Idea'),
     array('name' => 'name', 'value' => $title),
     array('name' => 'description' , 'value' => $problem),
-    array('name' => 'status' , 'value' => 'Submitted'),
+    array('name' => 'status' , 'value' => 'New'),
 );
 
 $savePortal = new SavePortal();

@@ -19,13 +19,16 @@
                     </form>
                 </div>
             </div>
+            <?php if($_REQUEST['action']=='myquestions'||$_REQUEST['action']=='myproblems'||$_REQUEST['action']=='myideas'){ ?>
+
             <div class="caseStat">
                 <ul>
-                    <li class="caseActive"><a href="">New</a>
-                    <li><a href="#">Pending</a>
-                    <li><a href="#">Open</a>
-                    <li><a href="#">Close</a>
+                    <li<?php if (empty($_REQUEST['stats'])){ echo ' class="caseActive" '; } ?>><a href="index.php?module=<?php echo $_REQUEST['module']; ?>&action=<?php echo $_REQUEST['action']; ?>">New</a></li>
+                    <li<?php if ($_REQUEST['stats'] == 'Pending'){ echo ' class="caseActive" '; } ?>><a href="index.php?module=<?php echo $_REQUEST['module']; ?>&action=<?php echo $_REQUEST['action']; ?>&stats=Pending">Pending</a></li>
+                    <li<?php if ($_REQUEST['stats'] == 'Open'){ echo ' class="caseActive" '; } ?>><a href="index.php?module=<?php echo $_REQUEST['module']; ?>&action=<?php echo $_REQUEST['action']; ?>&stats=Open">Open</a></li>
+                    <li<?php if ($_REQUEST['stats'] == 'Closed'){ echo ' class="caseActive" '; } ?>><a href="index.php?module=<?php echo $_REQUEST['module']; ?>&action=<?php echo $_REQUEST['action']; ?>&stats=Closed">Closed</a></li>
                 </ul>
             </div>
+            <?php } ?>
             <div class="clear"></div>
 

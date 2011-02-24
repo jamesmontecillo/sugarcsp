@@ -1,6 +1,9 @@
 <?php
 if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
-
+if (!isset($_SESSION['session_id'])){
+    $_SESSION["login_error"] = 'Session Timed Out';
+    header('Location: index.php?module=Users&action=Login&sessiontimeout=1');
+}
 global $portal, $sugar_config;
 $response = $portal->login($sugar_config['portal_username'], $sugar_config['portal_password'], $_SESSION['user_name'], $_SESSION['user_password']);
 
@@ -16,6 +19,7 @@ $data = $portal->getEntry('Contacts', $res['id'],
             'primary_address_state',
             'primary_address_postalcode',
             'primary_address_country',
+            'portal_user_password',
             )
         );
 
@@ -52,11 +56,11 @@ $session_id = $response['id'];
             <label>Zip</label>
             <input name="zip" type="text" id="title" value="<?php echo $data['data']['primary_address_postalcode']; ?>" />
         </div>
-        <!--
+        
         <div class="mTop15">
             <label>Password</label>
-            <input name="questiontitle" type="text" id="title" value="<?php echo $data['data']['email1']; ?>" />
-        </div>-->
+            <input name="password" type="password" id="title" value="<?php echo $data['data']['email1']; ?>" />
+        </div>
     </div>
 
     <!-- Reg Input Right -->
@@ -82,11 +86,11 @@ $session_id = $response['id'];
             <label>Country</label>
             <input name="country" type="text" id="title" value="<?php echo $data['data']['primary_address_country']; ?>" />
         </div>
-        <!--
+        
         <div class="mTop15">
             <label>Password Confirm</label>
-            <input name="questiontitle" type="text" id="title" value="<?php echo $data['data']['email1']; ?>" />
-        </div>-->
+            <input name="password_confirm" type="password" id="title" value="<?php echo $data['data']['email1']; ?>" />
+        </div>
     </div>
 
     <!-- Reg Bottom -->

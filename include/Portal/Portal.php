@@ -455,10 +455,9 @@ class Portal {
                     }
                     session_start();
                     $GLOBALS['log']->fatal($result['error']);
-//                    $app_strings = return_application_language($current_language);
-//                    $_SESSION['login_error'] = $app_strings['NTC_LOGIN_MESSAGE'];
-                    $_SESSION['login_error'] = $result['error']['name'];
-                    header('Location: index.php?module=Users&action=Login&err=1');
+                    $app_strings = return_application_language($current_language);
+                    $_SESSION['login_error'] = $app_strings['NTC_LOGIN_MESSAGE'];
+                    header('Location: index.php?module=Users&action=Login');
                     die();
                     break;
                 case '12': // no user configured
@@ -468,9 +467,8 @@ class Portal {
                     session_start();
                     $GLOBALS['log']->fatal($result['error']);
                     // redirect to login page here
-//                    $app_strings = return_application_language($current_language);
-//                    $_SESSION["login_error"] = $app_strings['ERR_PORTAL_LOGIN_FAILED'];
-                    $_SESSION["login_error"] = $result['error']['name'];
+                    $app_strings = return_application_language($current_language);
+                    $_SESSION["login_error"] = $app_strings['ERR_PORTAL_LOGIN_FAILED'];
                     header('Location: index.php?module=Users&action=Login&sessiontimeout=1');
                     die();
                     break;

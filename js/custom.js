@@ -20,6 +20,16 @@ $(document).ready(function(){
         }
         return false; //end note
     });
+	
+	$('.forgotP').hide();
+    $('.forgotLink').click(function(){
+        if( $(this).next().is(':hidden') ) {
+                $(this).toggleClass('active').next().slideDown();
+        }else{
+                $(this).toggleClass('active').next().slideUp();
+        }
+        return false; //end note
+    });
 
     //POPUP START
     $('a.poplight[href^=#]').click(function() {
@@ -52,6 +62,15 @@ $(document).ready(function(){
             $('#fade, a.close').remove();  //fade them both out
         });
         return false;
+    });
+
+    $("#regForm").validate({
+            rules: {
+            password_confirm:{equalTo: '#password'}
+            },//end of rules
+            messages: {
+            password_confirm: {equalTo: "Password not match"}
+            } //end of message
     });
 
 });

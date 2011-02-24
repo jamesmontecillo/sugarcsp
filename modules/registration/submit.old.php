@@ -28,7 +28,13 @@ global $portal, $sugar_config;
 $result = $portal->leadLogin($sugar_config['portal_username'], $sugar_config['portal_password']);
 $portal->handleResult($result);
 
-//print_r ($portal->getFields('Leads'));
+//$portal->login($sugar_config['portal_username'], $sugar_config['portal_password'], $sugar_config['username'], $sugar_config['password']);
+//$where = array(
+//        array('name'=>'email1', 'value'=>$email1, 'operator'=>'='),
+//);
+//print_r($portal->getEntries('Contacts', $where, $orderBy));
+
+//print_r ($portal->getFields('Contacts'));
 
 $dataarray = array(
 //    array('name' => 'salutation', 'value' => $salutation),
@@ -49,7 +55,11 @@ $dataarray = array(
     array('name' => 'primary_address_state', 'value' => $add_state),
     array('name' => 'primary_address_postalcode', 'value' => $add_postcode),
     array('name' => 'primary_address_country', 'value' => $add_country),
+    array('name' => 'portal_name', 'value' => $email1),
+    array('name' => 'portal_active', 'value' => '1'),
+    array('name' => 'portal_password', 'value' => md5($password)),
+    array('name' => 'team_id', 'value' => '1'),
     );
-$portal->save('Leads', $dataarray);
-header('Location: index.php?module=Users&action=Login');
+print_r($portal->save('Contacts', $dataarray));
+//header('Location: index.php?module=Users&action=Login');
 ?>

@@ -3,6 +3,18 @@ if(!defined('sugarEntry'))define('sugarEntry', true);
 
 require_once ('config.php');
 
+$startTime = microtime();
+///////////////////////////////////////////////////////////////////////////////
+////	DATA SECURITY MEASURES
+require_once ('include/utils.php');
+clean_special_arguments();
+clean_incoming_data();
+////	END DATA SECURITY MEASURES
+///////////////////////////////////////////////////////////////////////////////
+
+// cn: set php.ini settings at entry points
+setPhpIniSettings();
+
 // create the global Portal object
 require_once('include/Portal/Portal.php');
 $portal = new Portal();
@@ -30,6 +42,7 @@ session_start();
 $css = "style";
 $ie_css = "css-ie";
 $js = "jquery-latest";
+$validate_js = "jquery.validate";
 $custom_js = 'custom';
 $attachnote = 'modules/Notes/attachnotes.php';
 

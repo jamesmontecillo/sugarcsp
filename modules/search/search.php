@@ -1,4 +1,8 @@
 <?php if(!defined('sugarEntry') || !sugarEntry) die('Not A Valid Entry Point');
+if (!isset($_SESSION['session_id'])){
+    $_SESSION["login_error"] = 'Session Timed Out';
+    header('Location: index.php?module=Users&action=Login&sessiontimeout=1');
+}
 
 global $portal, $sugar_config;
 $response = $portal->login($sugar_config['portal_username'], $sugar_config['portal_password'], $_SESSION['user_name'], $_SESSION['user_password']);
