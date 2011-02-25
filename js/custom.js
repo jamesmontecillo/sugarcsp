@@ -73,9 +73,52 @@ $(document).ready(function(){
             } //end of message
     });
 
+
+    $('#forgot_password').submit(function(){
+        var formData = $(this).serialize();
+        var url="index.php?module=Users&action=forgot_password";
+        $.post(url,formData,processData);
+
+        function processData(data){
+            var dataerr = my_strip('<div id="pageWrapper">', '</div>', data)
+
+//            if (data.match("https")){
+//		$('#payhlink').click(function(){return false});
+//                location.href=data;
+                alert(dataerr);
+//            }
+        }
+        return false;
+    });
+
+
+
 });
 
 //search
 function clearDefault(el) {
     if (el.defaultValue==el.value) el.value = ""
+}
+
+function strstr (haystack, needle, bool) {
+    var pos = 0;
+
+    haystack += '';
+    pos = haystack.indexOf(needle);
+    if (pos == -1) {
+        return false;
+    } else {
+        if (bool) {
+            return haystack.substr(0, pos);
+        } else {
+            return haystack.slice(pos);
+        }
+    }
+}
+
+function my_strip(start, end, data){
+        var data = strstr(data, start, false);
+        var data = strstr(data, end, true);
+        var dataret2 = data.substr(start.length);
+        return dataret2;
 }

@@ -44,7 +44,7 @@
 		</form>
         
         <!-- Register / Forgot Password -->
-        <form action="index.php?module=Users&action=forgot_password" method="POST" >
+        <form action="index.php?module=Users&action=forgot_password" method="POST" id="forgot_password">
             <div class="mTop15 forgotpassword">
                 <a href="index.php?module=registration&action=registration" class="smallFont">register</a> |
                 <a href="#" class="forgotLink smallFont">forgot password</a>
