@@ -31,11 +31,10 @@ $session_id = $response['id'];
 //    array('name' => 'description', 'value' => 'Pogi'),
 //);
 //print_r($portal->getFields('Contacts'));
-//print_r($portal->soapClientProxy->portal_set_entry($session_id, 'Contacts', $dataarray));
 ?>
 <!-- SETTING EDIT -->
 <form action="index.php?module=settings&action=update" method="POST">
-    <div class="regInput left mTop15">
+    <div class="settingInput left mTop15">
         <div class="mTop15">
             <label>First Name</label>
             <input name="first_name" type="text" id="title7" value="<?php echo $data['data']['first_name']; ?>" />
@@ -64,7 +63,7 @@ $session_id = $response['id'];
     </div>
 
     <!-- Reg Input Right -->
-    <div class="regInput right mTop15">
+    <div class="settingInput right mTop15">
         <div class="mTop15">
             <label>Last Name</label>
             <input name="last_name" type="text" id="title" value="<?php echo $data['data']['last_name']; ?>" />

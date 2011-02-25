@@ -12,6 +12,7 @@ $dataarray = array(
     array('name' => 'name', 'value' => $title),
     array('name' => 'description' , 'value' => $question),
     array('name' => 'status' , 'value' => 'New'),
+    array ('name'=>'portal_viewable','value'=>'1', 'operator'=>'=')
 );
 
 $savePortal = new SavePortal();

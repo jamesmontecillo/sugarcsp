@@ -97,6 +97,7 @@
 	        $c->first_name = $ContactData->first_name;
 	        $c->last_name = $ContactData->last_name;
 	        $c->email1 = $ContactData->email_address;
+                $c->email_opt_out = $ContactData->email_opt_out;
                 $c->phone_mobile = $ContactData->phone_mobile;
 	        $c->primary_address_street = $ContactData->primary_address_street;
 	        $c->primary_address_city = $ContactData->primary_address_city;
@@ -111,7 +112,7 @@
                 $c->modified_user_id = $userid;
                 $c->save();
                 $return_code="0";
-                $return_msg = "Successfully updated contact";
+                $return_msg = "You have successfully created your account. Please login.";
                 $return_id = $c->id ;
                 }else{
                     $c = new Contact;
@@ -125,7 +126,7 @@
                     $c->modified_user_id = $userid;
                     $c->save();
                     $return_code="0";
-                    $return_msg = "Successfully updated contact";
+                    $return_msg = "Successfully updated your account";
                     $return_id = $c->id ;
                 }
 
@@ -156,6 +157,7 @@
                         $c->first_name = $ContactData->first_name;
                         $c->last_name = $ContactData->last_name; 
                         $c->email1 = $ContactData->email_address;
+                        $c->email_opt_out = $ContactData->email_opt_out;
                         $c->phone_mobile = $ContactData->phone_mobile;
                         $c->primary_address_street = $ContactData->primary_address_street;
                         $c->primary_address_city = $ContactData->primary_address_city;
@@ -171,7 +173,7 @@
                         $c->save();
                         $return_id = $c->id ;
                         $return_code="0"; 
-                        $return_msg = "Succesfully created contact";  
+                        $return_msg = "You have successfully created your account. Please login.";
 
                     }  else {
                         //The record was deleted in the miliseconds between the above count and now

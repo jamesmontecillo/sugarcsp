@@ -1,8 +1,16 @@
 </div> <!-- END OF ctnContent -->
+<?php global $sugar_config; ?>
     <div class="rightCtn left">
         <div class="ctnTop">
             <div class="avatar">
-            	<img src="images/profile_placeholder.png" alt="profile_pic" />
+                <?php if (!empty($_SESSION['picture'])){ ?>
+                <img id="img_picture"
+                    name="img_picture"
+                    src='<?php echo $sugar_config['parent_site_url']; ?>/cache/upload/<?php echo $_SESSION['picture']; ?>'
+                    class="avatarImg">
+                <?php } else {?>
+                    <img src="images/profile_placeholder.png" alt="profile_pic" class="avatarImg"/>
+                <?php } ?>
             </div>
             <div class="menu mediumFont">
                 <ul>

@@ -40,19 +40,20 @@ global $portal, $sugar_config;
                     "Username: $email\n".
                     "Password: $portal_user_password\n".
                     "or to renew your password, visit the link below: \n".
-                    "<a href='".$sugar_config['site_url']."/index.php?module=Users&action=new_password&id=$ret->return_id&u=$email&p=$portal_user_password>Click Here</a>'\n".
+                    "<a href='".$sugar_config['site_url']."/index.php?module=Users&action=new_password&id=$ret->return_id&u=$email&p=$portal_user_password'>Click Here</a>\n".
                     "\n";
 
                 $header = "From: ".$sugar_config['site_url'];
 
-                $retval = mail ($to,$subject,$message,$header);
+                $retval = mail($to,$subject,$message,$header);
                 if ($retval == true)
                 {
                     echo "A confirmation was sent to your email. Thank you!";
                     $_SESSION["login_error"] = "Check your email for verification \n$portal_user_password";
                     header('Location: index.php?module=Users&action=Login');
                 } else {
-                    echo "Opsss! Somethings Goes Wrong. Please go back and re-enter your email address";
+                    echo "Opsss! Somethings Goes Wrong. Please go back and re-enter your email address\n";
+                    echo $message;
                 }
                 //////////////////////////////////////////////////////////////////////
                 
@@ -73,7 +74,7 @@ global $portal, $sugar_config;
 
 
 
-function generatePassword($length=10,$level=2){
+function generatePassword($length,$level){
 
    list($usec, $sec) = explode(' ', microtime());
    srand((float) $sec + ((float) $usec * 100000));

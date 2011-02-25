@@ -1,8 +1,8 @@
 <?php if(!defined('sugarEntry'))define('sugarEntry', true);
-//require_once('include/Portal/Portal.php');
+require_once('include/Portal/Portal.php');
 require_once ('config.php');
 global $portal, $sugar_config;
-//$portal = new Portal();
+$portal = new Portal();
 //$portal->loadSoapClient();
 //print_r($portal->leadLogin($sugar_config['portal_username'], $sugar_config['portal_password']));
 //
@@ -14,35 +14,42 @@ global $portal, $sugar_config;
 //print_r($portal->getEntry('Contacts', $where, $orderBy));
 
 
-////$location = 'http://html2.com/rlsugarEnt/soap.php';
-//$location = $sugar_config['parent_site_url'] . "soap.php";
-//
-//// set up options array with SugarCRM location, etc
-//$options = array(
-//"location" => $location,
-//"uri" => 'http://www.sugarcrm.com/sugarcrm',
-//"trace" => 1
-//);
-//
-//// user authentication array
-//$user_auth = array(
-//"user_name" => 'admin',
-//"password" => MD5('3Fbc/ifn'),
-//"version" => '.01'
-//);
-//
-//// connect to soap server
-//$client = new SoapClient(NULL, $options);
-//
-//// Login to SugarCRM
-//$response = $client->login($user_auth,'SOAP Test');
-//$session_id = $response->id;
+//$location = 'http://html2.com/rlsugarEnt/soap.php';
+$location = $sugar_config['parent_site_url'] . "/soap.php";
 
-//$client->get_available_modules ($session_id);
-$module_name = 'Contacts';
-//$client->get_module_fields($session_id, $module_name, 'email1');
-//print_r($client);
+// set up options array with SugarCRM location, etc
+$options = array(
+"location" => $location,
+"uri" => 'http://www.sugarcrm.com/sugarcrm',
+"trace" => 1
+);
 
+// user authentication array
+$user_auth = array(
+"user_name" => 'admin',
+"password" => MD5('3Fbc/ifn'),
+"version" => '.01'
+);
+
+// connect to soap server
+$client = new SoapClient(NULL, $options);
+
+// Login to SugarCRM
+$response = $client->login($user_auth,'SOAP Test');
+$session_id = $response->id;
+
+//$mod = $client->get_available_modules ($session_id);
+//print_r($mod);
+$module_name = 'Emails';
+$result = $client->get_module_fields($session_id, 'Contacts', $fields);
+print_r($result);
+$emaildata = array(
+    array('name'=>'name' , 'value'=>"Remotelink Sugar Customer Service Portal"),
+    );
+$emailresult = $client->set_entry($session_id, $module_name, $emaildata);
+print_r($emailresult);
+
+$results = $client->get_entry($session_id, $module_name, $emailresult['id'], 'id', '');
 //$query = array(array('name' => 'email1', 'value' => 'sales23@example.edu', 'operator'=>'='));
 
 //$query = "'where email1 = sales23@example.edu'";
@@ -55,5 +62,6 @@ $module_name = 'Contacts';
 //$client->get_entries_count($session_id, $module_name, $query, $deleted);
 
 //$client->search_by_module($session_id, $query, $module_name, $offset, $max_results);
-print_r($client);
+//$client = $portal->handleResult($result);
+print_r($results);
 ?>

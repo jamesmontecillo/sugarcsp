@@ -10,7 +10,7 @@
     //$do_not_call = $_REQUEST[''];
     $email_address = $_REQUEST['email'];
     //$email2 = $_REQUEST[''];
-    //$email_opt_out = $_REQUEST[''];
+    $email_opt_out = $_REQUEST['email_opt_out'];
     //$title = $_REQUEST[''];
     //$department = $_REQUEST[''];
     //$account_name =
@@ -37,6 +37,7 @@
                 'first_name'=>$first_name,
                 'last_name'=>$last_name,
                 'email_address'=>$email_address,
+                'email_opt_out'=>$email_opt_out,
                 'phone_mobile'=>$phone_mobile,
                 'primary_address_street'=>$address,
 	        'primary_address_city'=>$add_city,

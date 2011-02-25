@@ -54,10 +54,10 @@ require_once('include/ListView/list.php');
             </div>
             <?php } ?>
             <div class="attachCtn right">
-                <span><a href="#?w=610" rel="popup_name" class="poplight">Create Note</a></span>
+                <span><a href="#?w=610" rel="popup_name_<?php echo $i; ?>" class="poplight">Create Note</a></span>
             </div>
                 <!-- CALL THE ATTACH NOTE -->
-                <div id="popup_name" class="popup_block">
+                <div id="popup_name_<?php echo $i; ?>" class="popup_block">
                    <?php
                    $returnmodule = 'myquestions';
                    $returnaction = 'myquestions';
@@ -66,7 +66,7 @@ require_once('include/ListView/list.php');
                 </div>
 
 <?php
-$fields = array('id','name','description');
+$fields = array('id','name','description','filename');
 $relateddata = new ListData();
 $data = $relateddata->getrelateddata('Cases', 'Notes', $fields, $id);
 //print_r($data);
@@ -89,10 +89,10 @@ if (!empty($data['entry_list'][$j]['id'])){
                             <?php echo $data['entry_list'][$j]['name_value_list']['1']['value']; ?> &nbsp;
                             </div>
                             <div class="noteDesc">
-                            <?php echo $data['entry_list'][$j]['name_value_list']['2']['value']; ?> &nbsp;
+                            <?php echo $data['entry_list'][$j]['name_value_list']['3']['value']; ?> &nbsp;
                             </div>
                             <div class="attach">
-                                Attached &nbsp;
+                                <?php echo $data['entry_list'][$j]['name_value_list']['2']['value']; ?> &nbsp;
                             </div>
                         </div>
                         <?php $j++; } ?>

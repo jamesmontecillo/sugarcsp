@@ -9,7 +9,7 @@ $manifest = array(
     'name' => 'API for Creating Portal users',
 
     // description of new code
-    'description' => '6.1.02 -  Create a new entrypoint for an API to create portal users and link to accoujnt',
+    'description' => '6.1.1 -  Create a new entrypoint for an API to create portal users and link to accoujnt',
 
     // author of new code
     'author' => 'ATCORE Systems',
@@ -18,7 +18,7 @@ $manifest = array(
     'published_date' => '2011/02/15',
 
     // version of code
-    'version' => '6.1.0',
+    'version' => '6.1.1',
 
     // type of code (valid choices are: full, langpack, module, patch, theme )
     'type' => 'module',

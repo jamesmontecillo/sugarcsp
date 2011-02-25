@@ -11,11 +11,12 @@ global $portal, $sugar_config;
 $portal->login($sugar_config['portal_username'], $sugar_config['portal_password'], $user_name, $password);
 
 $res = $portal->getCurrentUserID();
-$data = $portal->getEntry('Contacts', $res['id'], array('first_name','last_name','account_name'));
+$data = $portal->getEntry('Contacts', $res['id'], array('first_name','last_name','account_name', 'picture'));
 
 //print_r($data);
 
 $_SESSION['fullname'] = $data['data']['first_name'] . " " . $data['data']['last_name'];
+$_SESSION['picture'] = $data['data']['picture'];
 $_SESSION['account_name'] = $data['data']['account_name'];
 $_SESSION['session_id'] = $res['id'];
 

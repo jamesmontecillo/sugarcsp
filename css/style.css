@@ -114,17 +114,22 @@ input, textarea {
     }
         .login-bottom .loginsubmit { width:100px }
 /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ REGISTRATION */
-#regCtn { width:600px }
-    .regInput { width:250px }
-        .regInput label { float:left; font-size:.9em; margin-bottom:2px }
-        .regInput input { width:230px }
+#regCtn { width:400px; }
+    .regInput { width:350px; margin-left:13px }
+        .regInput label { font-size:.9em; margin-bottom:2px; width:350px }
+        .regInput input { width:300px }
     .reg-bottom {
         height:35px;
         line-height:35px;
         margin-top:30px;
-        width:538px;
+        width:330px;
     }
-        .reg-bottom .regsubmit { width:200px }
+        .reg-bottom .regsubmit { width:120px }
+		
+    .settingInput { width:250px }
+        .settingInput label { float:left; font-size:.9em; margin-bottom:2px }
+        .settingInput input { width:230px }
+		
 /* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ CONTENT / add */
 #contentWrapper { width:920px }
     /* LEFT CONTENT */
@@ -399,6 +404,13 @@ input, textarea {
     .rightCtn h3 { color:#000; font:normal 1em Arial; margin-bottom:10px }
         /* AVATAR */
         .avatar { float:left; display:inline; margin-right:10px }
+			.avatarImg {
+				border:1px solid #666;
+				width:39px;
+				-webkit-border-radius:5px;
+				   -moz-border-radius:5px;
+						border-radius:5px
+			}
         .menu { font-family: arial, sans-serif }
         .menu ul li a.top {
             color:#666;
