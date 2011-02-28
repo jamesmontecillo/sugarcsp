@@ -13,13 +13,14 @@ $data = $portal->getEntry('Contacts', $res['id'],
             'first_name',
             'last_name',
             'email1',
+            'email_opt_out',
             'phone_mobile',
             'primary_address_street',
             'primary_address_city',
             'primary_address_state',
             'primary_address_postalcode',
             'primary_address_country',
-            'portal_user_password',
+            'portal_user_password'
             )
         );
 
@@ -42,7 +43,11 @@ $session_id = $response['id'];
         <div class="mTop15">
             <label>Email Name</label>
             <input name="email" type="text" id="title" value="<?php echo $data['data']['email1']; ?>" />
-        </div>
+        </div><!--
+        <div class="mTop15">
+            <label>Email Opt Out: </label>
+            <input type='checkbox' class='checkbox' name='email_opt_out' size='' value='1' tabindex="4" <?php if(!empty($data['data']['email_opt_out'])) {echo "CHECKED";} ?> >
+        </div>-->
         <div class="mTop15">
             <label>Street 1</label>
             <input name="street_add1" type="text" id="title" value="<?php echo $data['data']['primary_address_street']; ?>" />
@@ -54,12 +59,7 @@ $session_id = $response['id'];
         <div class="mTop15">
             <label>Zip</label>
             <input name="zip" type="text" id="title" value="<?php echo $data['data']['primary_address_postalcode']; ?>" />
-        </div>
-        
-        <div class="mTop15">
-            <label>Password</label>
-            <input name="password" type="password" id="title" value="<?php echo $data['data']['email1']; ?>" />
-        </div>
+        </div>      
     </div>
 
     <!-- Reg Input Right -->
@@ -85,11 +85,15 @@ $session_id = $response['id'];
             <label>Country</label>
             <input name="country" type="text" id="title" value="<?php echo $data['data']['primary_address_country']; ?>" />
         </div>
-        
+        <!--
+        <div class="mTop15">
+            <label>Password</label>
+            <input name="password" type="password" id="title" value="<?php echo $data['data']['email1']; ?>" />
+        </div>
         <div class="mTop15">
             <label>Password Confirm</label>
             <input name="password_confirm" type="password" id="title" value="<?php echo $data['data']['email1']; ?>" />
-        </div>
+        </div>-->
     </div>
 
     <!-- Reg Bottom -->

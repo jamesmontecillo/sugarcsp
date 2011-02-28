@@ -52,6 +52,19 @@
                 )
             );
 
+    if ($_REQUEST['new_password']=='new_password'){
+            $contact='';
+            $contact=json_encode(
+            array(
+                'email_address'=>$email_address,
+                'portal_user_password'=>$portal_user_password,
+                'login'=>$login,
+                'password'=>$password,
+                'datafrom'=>''
+                )
+            );
+    }
+
     $submit_vars['ContactData'] = $contact;
     $submit_url = "$server/index.php?module=Contacts&entryPoint=customPortalUserCreate";
     $snoopy = new Snoopy;
@@ -64,14 +77,14 @@
             $return_code=$ret->return_code;
             if($return_code=='0'){
                 //Successful
-//                echo "$ret->return_msg Contact id is: $ret->return_id";
+                echo "$ret->return_msg Contact id is: $ret->return_id";
                 $_SESSION["login_error"] = "$ret->return_msg";
-                header('Location: index.php?module=Users&action=Login');
+//                header('Location: index.php?module=Users&action=Login');
             } else {
                 //Error
-//                echo "Error:  Return code is $ret->return_code Error message is $ret->return_msg" ;
+                echo "Error:  Return code is $ret->return_code Error message is $ret->return_msg" ;
                 $_SESSION["login_error"] = "$ret->return_msg";
-                header('Location: index.php?module=Users&action=Login');
+//                header('Location: index.php?module=Users&action=Login');
             }
         }
         else
@@ -80,9 +93,9 @@
             $msg=strip_tags($snoopy->results);
             $err_str=strip_tags($snoopy->results);
             $error=true;
-//            echo "Error $msg" ;
+            echo "Error $msg" ;
             $_SESSION["login_error"] = "Error $msg";
-            header('Location: index.php?module=Users&action=Login');
+//            header('Location: index.php?module=Users&action=Login');
         }
     }
     

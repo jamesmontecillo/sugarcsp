@@ -33,6 +33,7 @@ global $portal, $sugar_config;
                 echo "Successful $ret->return_msg Contact id is: $ret->return_id";
 
                 //////////////////////////////////////////////////////////////////////
+                $urlmail = urlencode($email);
                 $to = $email;
                 $subject = "Remotelink Sugar Customer Service Portal\n\n\n";
                 $message = "Forgot Password\n\n".
@@ -40,7 +41,7 @@ global $portal, $sugar_config;
                     "Username: $email\n".
                     "Password: $portal_user_password\n".
                     "or to renew your password, visit the link below: \n".
-                    "<a href='".$sugar_config['site_url']."/index.php?module=Users&action=new_password&id=$ret->return_id&u=$email&p=$portal_user_password'>Click Here</a>\n".
+                    "<a href='".$sugar_config['site_url']."/index.php?module=registration&action=new_password&id=$ret->return_id&u=$urlmail&p=$portal_user_password'>Click Here</a>\n".
                     "\n";
 
                 $header = "From: ".$sugar_config['site_url'];

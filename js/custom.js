@@ -90,7 +90,22 @@ $(document).ready(function(){
         }
         return false;
     });
+    $('#regForm').submit(function(){
+        var formData = $(this).serialize();
+        var url="index.php?module=registration&action=submit";
+        $.post(url,formData,processData);
 
+        function processData(data){
+            var dataerr = my_strip('<div id="pageWrapper">', '</div>', data)
+
+//            if (data.match("https")){
+//		$('#payhlink').click(function(){return false});
+//                location.href=data;
+                alert(dataerr);
+//            }
+        }
+        return false;
+    });
 
 
 });
