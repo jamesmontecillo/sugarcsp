@@ -66,13 +66,42 @@ $(document).ready(function(){
 
     $("#regForm").validate({
             rules: {
-            password_confirm:{equalTo: '#password'}
+                email:{
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    rangelength: [8,16]
+                },
+                password_confirm:{
+                    equalTo: '#password'
+                }
             },//end of rules
             messages: {
-            password_confirm: {equalTo: "Password not match"}
+                password_confirm: {
+                    equalTo: "Password not match"
+                }
             } //end of message
     });
+    
+    $('#regForm').submit(function(){
+        var formData = $(this).serialize();
+        var url="index.php?module=registration&action=submit";
+        $.post(url,formData,processData);
 
+        function processData(data){
+            var dataerr = my_strip('<div id="pageWrapper">', '</div>', data);
+//alert(dataerr);
+            if (dataerr.match("Error:")){
+//                alert(dataerr);
+                $(".err").html("<div class='errorMsg mTop15' >" + dataerr + "</div>");
+            }else{
+                location.href='index.php?module=Users&action=Login';
+            }
+        }
+        return false;
+    });
 
     $('#forgot_password').submit(function(){
         var formData = $(this).serialize();
@@ -80,33 +109,24 @@ $(document).ready(function(){
         $.post(url,formData,processData);
 
         function processData(data){
-            var dataerr = my_strip('<div id="pageWrapper">', '</div>', data)
-
-//            if (data.match("https")){
-//		$('#payhlink').click(function(){return false});
-//                location.href=data;
-                alert(dataerr);
-//            }
+//            var dataerr = my_strip('<div id="pageWrapper">', '</div>', data)
+//                alert(dataerr);
+                location.href='index.php?module=Users&action=Login';
         }
         return false;
     });
-    $('#regForm').submit(function(){
+
+    $('#new_password').submit(function(){
         var formData = $(this).serialize();
         var url="index.php?module=registration&action=submit";
         $.post(url,formData,processData);
 
         function processData(data){
-            var dataerr = my_strip('<div id="pageWrapper">', '</div>', data)
-
-//            if (data.match("https")){
-//		$('#payhlink').click(function(){return false});
-//                location.href=data;
-                alert(dataerr);
-//            }
+//            var dataerr = my_strip('<div id="pageWrapper">', '</div>', data);
+                location.href='index.php?module=Users&action=Login';
         }
         return false;
     });
-
 
 });
 

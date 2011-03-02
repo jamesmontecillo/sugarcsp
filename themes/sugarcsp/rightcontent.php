@@ -32,7 +32,7 @@
         <!-- END OF RIGHT CONTENT TOP -->
         <div class="mTop30">
             <div class="sidebar">
-                <h3>Additional support links</h3>
+                <h4>Additional support links</h4>
                 <div class="supportlinks">
                     <img src="images/twitter-logo-square-webtreatsetc.png" alt="twitter_icon" width="25" height="25" align="left" />
                     <a href="http://www.twitter.com/remotelinkinc" target="_blank">Twitter</a>

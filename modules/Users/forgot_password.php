@@ -14,7 +14,7 @@ global $portal, $sugar_config;
                 'portal_user_password'=>$portal_user_password,
                 'login'=>$sugar_config['portal_username'],
                 'password'=>$sugar_config['portal_password'],
-                'datafrom'=>''
+                'datafrom'=>'forgot_password'
                 )
             );
 
@@ -61,6 +61,7 @@ global $portal, $sugar_config;
             } else {
                 //Error
                 echo "Error:  Return code is $ret->return_code Error message is $ret->return_msg" ;
+                $_SESSION["login_error"] = "Error:  Return code is $ret->return_code Error message is $ret->return_msg" ;
             }
         }
         else
@@ -69,7 +70,7 @@ global $portal, $sugar_config;
             $msg=strip_tags($snoopy->results);
             $err_str=strip_tags($snoopy->results);
             $error=true;
-            echo "Error $msg" ;
+            echo $_SESSION["login_error"] = "Error $msg" ;
         }
     }
 

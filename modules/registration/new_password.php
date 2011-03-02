@@ -24,7 +24,7 @@ $_SESSION['session_id'] = $res['id'];
 ?>
 <div id="loginCtn" class="pageDesign">
     <div class="pagePadding">
-		<form action="index.php?module=registration&action=submit" method="POST" name="new_password">
+		<form action="index.php?module=registration&action=submit" method="POST" name="new_password" id="new_password">
             <!-- RL Logo -->
             <!--<div class="loginLogo"></div>-->
             <div class="newPassCtn">
@@ -64,5 +64,5 @@ $_SESSION['session_id'] = $res['id'];
 }else{
     header("Location: index.php?module=Users&action=Login");
 }
-///http://ec2.remotelink.com/sugarportal/index.php?module=registration&action=new_password&id=1234&u=james.montecillo%40remotelink.com&p=3Fbc/ifn
+///http://ec2.remotelink.com/sugarportal/index.php?module=registration&action=new_password&id=1234&u=jmsmontecillo%40gmail.com&p=3Fbc/ifn
 ?>

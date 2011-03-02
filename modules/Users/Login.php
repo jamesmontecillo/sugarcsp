@@ -9,15 +9,19 @@
             
         <?php
             if ($_REQUEST['err'] == 1){
+                if (!empty($_SESSION["login_error"])) {
                 echo
                 '<div class="errorMsg mTop15">' .
                     $_SESSION["login_error"] .
                 '</div>';
+                }
             }else if ($_REQUEST['sessiontimeout'] == 1) {
+                if (!empty($_SESSION["login_error"])) {
                 echo
                 '<div class="errorMsg mTop15">' .
                     $_SESSION["login_error"] .
                 '</div>';
+                }
             }else if (!empty($_SESSION["login_error"])) {
                 echo
                 '<div class="errorMsg mTop15">' .

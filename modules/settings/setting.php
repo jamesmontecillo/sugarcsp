@@ -4,6 +4,7 @@ if (!isset($_SESSION['session_id'])){
     $_SESSION["login_error"] = 'Session Timed Out';
     header('Location: index.php?module=Users&action=Login&sessiontimeout=1');
 }
+require_once("snoopy.class.php");
 global $portal, $sugar_config;
 $response = $portal->login($sugar_config['portal_username'], $sugar_config['portal_password'], $_SESSION['user_name'], $_SESSION['user_password']);
 
@@ -27,6 +28,40 @@ $data = $portal->getEntry('Contacts', $res['id'],
 //print_r($data);
 $session_id = $response['id'];
 
+    $login=$sugar_config['portal_username'];//'spadmin';
+    $password=$sugar_config['portal_password'];//'3Fbc/ifn';
+    $server=$sugar_config['parent_site_url'];//'http://html2.com/rlsugarEnt';
+//    $server='http://localhost:8080/SugarPro551';
+
+    $contact=json_encode(
+    array(
+        'email_address'=>$data['data']['email1'],
+        'login'=>$login,
+        'password'=>$password,
+        'datafrom'=>'setting'
+        )
+    );
+
+
+    $submit_vars['ContactData'] = $contact;
+    $submit_url = "$server/index.php?module=Contacts&entryPoint=customPortalUserCreate";
+    $snoopy = new Snoopy;
+
+    if ($snoopy->submit($submit_url,$submit_vars))
+    {
+        $ret = json_decode($snoopy->results);
+        if (isset($ret))
+        {
+            $return_code=$ret->return_code;
+            if($return_code=='0'){
+                //Successful
+//                echo "$ret->return_msg Contact id is: $ret->return_id";
+//                $_SESSION["login_error"] = "$ret->return_msg";
+//                print_r($ret);
+           
+
+
+
 //$dataarray = array(
 //    array('name' => 'id', 'value' => $res['id']),
 //    array('name' => 'description', 'value' => 'Pogi'),
@@ -43,11 +78,11 @@ $session_id = $response['id'];
         <div class="mTop15">
             <label>Email Name</label>
             <input name="email" type="text" id="title" value="<?php echo $data['data']['email1']; ?>" />
-        </div><!--
+        </div>
         <div class="mTop15">
             <label>Email Opt Out: </label>
-            <input type='checkbox' class='checkbox' name='email_opt_out' size='' value='1' tabindex="4" <?php if(!empty($data['data']['email_opt_out'])) {echo "CHECKED";} ?> >
-        </div>-->
+            <input type='checkbox' class='checkbox' name='email_opt_out' size='' value='1' tabindex="4" <?php if(!empty($ret->return_id)) {echo "CHECKED";} ?> >
+        </div>
         <div class="mTop15">
             <label>Street 1</label>
             <input name="street_add1" type="text" id="title" value="<?php echo $data['data']['primary_address_street']; ?>" />
@@ -101,3 +136,22 @@ $session_id = $response['id'];
         <input type="submit" value="Update" name="submit" class="submit regsubmit" />
     </div>
 </form>
+<?php
+
+ } else {
+                //Error
+                echo "Error:  Return code is $ret->return_code Error message is $ret->return_msg" ;
+//                $_SESSION["login_error"] = "$ret->return_msg";
+            }
+        }
+        else
+        {
+            //Error
+            $msg=strip_tags($snoopy->results);
+            $err_str=strip_tags($snoopy->results);
+            $error=true;
+            echo "Error $msg" ;
+            $_SESSION["login_error"] = "Error $msg";
+        }
+    }
+?>

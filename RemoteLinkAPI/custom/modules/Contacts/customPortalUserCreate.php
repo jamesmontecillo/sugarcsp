@@ -52,7 +52,9 @@
     $err=false;
     if ($ContactData->datafrom == 'reg'){
         $required_fields=array("last_name","first_name","email_address","portal_user_password","login","password","team_id");
-    }else{
+    }else if ($ContactData->datafrom == 'forgot_password'){
+        $required_fields=array("email_address");
+    }else if ($ContactData->datafrom == 'setting'){
         $required_fields=array("email_address");
     }
     
@@ -81,7 +83,7 @@
             $userid = $row['id'];
             //Check for email address for contact
             $email = strtolower($ContactData->email_address)  ;
-            $q = "select contacts.id from contacts
+            $q = "select contacts.id, email_addresses.opt_out from contacts
             inner join email_addr_bean_rel on bean_id = contacts.id and bean_module='Contacts' and email_addr_bean_rel.deleted = 0
             inner join email_addresses on email_addresses.id = email_addr_bean_rel.email_address_id and 
             email_addresses.email_address='$email' and email_addresses.deleted=0
@@ -114,7 +116,7 @@
                 $return_code="0";
                 $return_msg = "You have successfully created your account. Please login.";
                 $return_id = $c->id ;
-                }else{
+                }else if ($ContactData->datafrom == 'forgot_password'){
                     $c = new Contact;
                     $c->retrieve($row['id']);
                     $c->id = $row['id'];
@@ -128,6 +130,14 @@
                     $return_code="0";
                     $return_msg = "Successfully updated your account";
                     $return_id = $c->id ;
+                }else if ($ContactData->datafrom == 'setting'){
+                    $c = new Contact;
+                    $c->retrieve($row['id']);
+                    $c->id = $row['id'];
+                    $c->email_opt_out = $row['opt_out'];
+                    $return_code="0";
+                    $return_msg = "Successfully Query your email";
+                    $return_id = $c->email_opt_out;
                 }
 
             } else {

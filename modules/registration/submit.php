@@ -60,7 +60,7 @@
                 'portal_user_password'=>$portal_user_password,
                 'login'=>$login,
                 'password'=>$password,
-                'datafrom'=>''
+                'datafrom'=>'forgot_password'
                 )
             );
     }
