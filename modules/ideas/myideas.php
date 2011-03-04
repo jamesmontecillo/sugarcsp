@@ -20,23 +20,32 @@ require_once('include/ListView/list.php');
 
     $cases = new ListData();
     $case = $cases->processdata($stats, $where, $orderBy);
-    
+
+//    $neededdata = array('assigned_user_name','name', 'description','status');
+
+    foreach ($case['entry_list'] as $casedata){
+        $id = $casedata['id'];
+//        foreach ($casedata['name_value_list'] as $casevalue){
+//            foreach ($neededdata as $data){
+//                if ($casevalue['name']==$data){
+////                    echo $casevalue['value'];
+//                }
+//            }
+////            print_r($casevalue);
+//        }
+//        print_r($casedata);
+//    }
 //    print_r($case);
-    $result_count = $case['result_count'];
 
 ?>
 <!-- MY IDEAS -->
-<?php
-	for ($i=0; $i<$result_count; $i++){
-            $id = $case['entry_list'][$i]['id'];
-?>
     <div class="userListCtn">
-        <h2><?php echo $case['entry_list'][$i]['name_value_list']['5']['value']; ?></h2>
-	<p><?php echo $case['entry_list'][$i]['name_value_list']['10']['value']; ?></p>
+        <h2><?php echo $casedata['name_value_list']['5']['value']; ?></h2>
+	<p><?php echo $casedata['name_value_list']['10']['value']; ?></p>
 
     	<div class="userListStatCtn">
             <div class="progressCtn">
-                <span><b>Status : <?php echo $case['entry_list'][$i]['name_value_list']['17']['value']; ?></b></span>
+                <span><b>Status : <?php echo $casedata['name_value_list']['17']['value']; ?></b></span>
             </div>
             <?php /* ?>
             <div class="dateCtn">
@@ -48,16 +57,16 @@ require_once('include/ListView/list.php');
                 ?>
                 </span>
             </div> <? */ ?>
-            <?php if (!empty($case['entry_list'][$i]['name_value_list']['0']['value'])) { ?>
+            <?php if (!empty($casedata['name_value_list']['0']['value'])) { ?>
             <div class="repCtn">
-                <span><?php echo $case['entry_list'][$i]['name_value_list']['0']['value']; ?></span>
+                <span><?php echo $casedata['name_value_list']['0']['value']; ?></span>
             </div>
             <?php } ?>
             <div class="attachCtn right">
-                <span><a href="#?w=610" rel="popup_name_<?php echo $i; ?>" class="poplight">Create Note</a></span>
+                <span><a href="#?w=610" rel="popup_name_<?php echo $id; ?>" class="poplight">Create Note</a></span>
             </div>
                 <!-- CALL THE ATTACH NOTE -->
-                <div id="popup_name_<?php echo $i; ?>" class="popup_block">
+                <div id="popup_name_<?php echo $id; ?>" class="popup_block">
                    <?php
                    $returnmodule = 'ideas';
                    $returnaction = 'myideas';
@@ -65,14 +74,13 @@ require_once('include/ListView/list.php');
                    ?>
                 </div>
 
-<?php
-$fields = array('id','name','description','filename');
-$relateddata = new ListData();
-$data = $relateddata->getrelateddata('Cases', 'Notes', $fields, $id);
-//print_r($data);
-$j=0;
-if (!empty($data['entry_list'][$j]['id'])){
-?>
+        <?php
+        $fields = array('id','name','description','filename');
+        $relateddata = new ListData();
+        $notedata = $relateddata->getrelateddata('Cases', 'Notes', $fields, $id);
+        //print_r($data);
+        if (!empty($notedata['entry_list'][0]['id'])){
+        ?>
             <div class="noteCtn right bright">
                  <span><a href="#">View Note</a></span>
             </div>
@@ -83,23 +91,74 @@ if (!empty($data['entry_list'][$j]['id'])){
                         <div class="noteDesc">Note</div>
                         <div class="attach">Attachment</div>
                     </div>
-                        <?php while(!empty($data['entry_list'][$j]['id'])){ ?>
+                        <?php
+                        foreach ($notedata['entry_list'] as $notevalue){
+//                                    echo $notevalue['id'];
+//                                    print_r($notevalue);
+                            if (!empty($notevalue['id'])){
+                        ?>
                     <div class="noteContent left">
                         <div class="noteSubjects">
-                            <?php echo $data['entry_list'][$j]['name_value_list']['1']['value']; ?> &nbsp;
+                            <?=$notevalue['name_value_list']['1']['value']?> &nbsp;
                         </div>
                         <div class="noteDesc">
-                            <?php echo $data['entry_list'][$j]['name_value_list']['3']['value']; ?> &nbsp;
+                            <?php
+                            $notedescription = $notevalue['name_value_list']['3']['value'];
+                            $title='';
+                            $title1 = '';
+                            $title2 = '';
+                                if (strlen($notedescription) > 30){
+                                    $val = strlen($notedescription)-30;
+                                    $title1 = substr($notedescription,0,-$val);
+                                    echo $title1 .= "<span class='noteread-more'><a href='#'>Read More</a></span>";
+
+                                    $title2 = substr($notedescription,30);
+
+                                    $pos = strpos($title2, " ");
+                                    if(empty($pos)){
+                                        while(strlen($title2) > 0){
+                                            $val2 = strlen($title2)-30;
+                                            $title .= substr($title2,0,-$val2) . "\n";
+
+                                            $title2 = substr($title2,30);
+                                        }
+                                        $title2 = $title;
+                                    }
+                                    echo "<dt class='read-more'>-".$title2."</dt>";
+                                }else{
+                                    echo $notedescription ;
+                                }
+
+                            ?> &nbsp;
                         </div>
                         <div class="attach">
-                                <?php echo $data['entry_list'][$j]['name_value_list']['2']['value']; ?> &nbsp;
+                            <?php
+                            $attach = $notevalue['name_value_list']['2']['value'];
+                                
+                                if (strlen($attach)>17){
+                                    $pos = strpos($attach, " ");
+                                    if(empty($pos)){
+                                        while(strlen($attach) > 0){
+                                            $val = strlen($attach)-17;
+                                            $att .= substr($attach,0,-$val) . "\n";
+
+                                            $attach = substr($attach,17);
+                                        }
+                                        $attach = $att;
+                                    }
+                                }
+                                echo $attach;
+                            ?> &nbsp;
                         </div>
                     </div>
-                        <?php $j++; } ?>
+                        <?php 
+                            }
+                        }
+                        ?>
                     <!-- END -->
                 </div>
             </div>
-<?php } ?>
+        <?php } ?>
         </div>
     </div> <!-- end of userListCtn -->
 <?php } ?>

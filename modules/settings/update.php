@@ -40,7 +40,7 @@ $dataarray = array(
 //    array('name' => 'do_not_call', 'value' => $do_not_call),
     array('name' => 'email1', 'value' => $email1),
 //    array('name' => 'email2', 'value' => $email2),
-//    array('name' => 'email_opt_out', 'value' => $email_opt_out),
+    array('name' => 'email_opt_out', 'value' => $email_opt_out),
 //    array('name' => 'title', 'value' => $title),
 //    array('name' => 'department', 'value' => $department),
 //    array('name' => 'account_name', 'value' => $account_name),

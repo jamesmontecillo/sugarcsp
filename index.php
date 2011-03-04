@@ -41,11 +41,7 @@ session_start();
 
 $css = "style";
 $ie_css = "css-ie";
-$js = "jquery-latest";
-$validate_js = "jquery.validate";
-$custom_js = 'custom';
 $attachnote = 'modules/Notes/attachnotes.php';
-
 include_once("themes/sugarcsp/header.php");
 
 if ($_REQUEST['module']!='Users'){

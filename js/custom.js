@@ -20,6 +20,16 @@ $(document).ready(function(){
         }
         return false; //end note
     });
+
+    $('.read-more').hide();
+    $('.noteread-more').click(function(){
+        if( $(this).next().is(':hidden') ) {
+                $(this).toggleClass('active').next().slideDown();
+        }else{
+                $(this).toggleClass('active').next().slideUp();
+        }
+        return false; //end note
+    });
 	
 	$('.forgotP').hide();
     $('.forgotLink').click(function(){
@@ -75,6 +85,7 @@ $(document).ready(function(){
                     rangelength: [8,16]
                 },
                 password_confirm:{
+                    required: true,
                     equalTo: '#password'
                 }
             },//end of rules
@@ -127,7 +138,6 @@ $(document).ready(function(){
         }
         return false;
     });
-
 });
 
 //search

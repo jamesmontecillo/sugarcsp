@@ -8,9 +8,7 @@
     <!--[if lte IE 6]>
         <link rel="stylesheet" type="text/css" href="css/<?php echo $ie_css; ?>.css" media="screen" />
     <![endif]-->
-    <script type="text/javascript" src="js/<?php echo $js; ?>.js"></script>
-    <script type="text/javascript" src="js/<?php echo $validate_js; ?>.js"></script>
-    <script type="text/javascript" src="js/<?php echo $custom_js; ?>.js"></script>
+    <?php include_once("js/jquery_list.php"); ?>
 </head>
 <body>
 <div id="pageWrapper">

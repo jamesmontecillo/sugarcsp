@@ -29,7 +29,7 @@
                 </div>
                 <div class="mTop15">
                     <label>Password Confirm</label>
-                    <input name="password_confirm" type="password" value="" tabindex="6" />
+                    <input name="password_confirm" type="password" value="" tabindex="6" class="required" />
                 </div>
             </div>
             <!-- Reg Bottom -->
